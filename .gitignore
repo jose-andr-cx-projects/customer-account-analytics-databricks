@@ -1,0 +1,15 @@
+# Local / sensitive files
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.csv
+*.parquet
+*.xlsx
+*.pbix
+*.pbit
+*.db
+*.sqlite
+__pycache__/
+.ipynb_checkpoints/
