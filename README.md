@@ -35,6 +35,21 @@ Inspect existing tables and views before deciding which to reuse or improve. Sou
 
 Do not presume all areas are available from the Databricks schema or in scope for the first release. Exclude GA4 and Genesys-origin measures from the initial replication unless separately approved.
 
+## Salesforce Permit vs BLA workflow — discovery requirement
+
+The rebuilt analytics model must distinguish **Permit** and **BLA** (Business Licensing Application) workflow behaviour using the Salesforce service-configuration findings. Do not assume these are interchangeable solely because an item is recorded as an APPLY case or has permit-related wording.
+
+During read-only discovery:
+
+- Recover the approved Salesforce service-configuration classifications, service names/groups, record types and workflow transitions that identify Permit versus BLA processes.
+- Verify how each process creates or links Salesforce cases, applications, permits and customer accounts; check whether a case represents a transaction, an enquiry or an intermediate workflow step.
+- Test the existing `vwpermit` and `vwcase` grain, linking keys and coverage for each workflow. Previous Power BI work required a permit-to-account bridge through `vwcase` because `vwpermit` did not expose a direct account ID; revalidate this against the live schema.
+- Check how duplicate or multi-stage cases could inflate application counts, support rates and account activity.
+- Produce a documented and testable classification before changing any source view or adding Permit/BLA dashboard splits.
+- Compare historical APPLY/ASK logic and BLA-suffix heuristics with actual configured workflow behaviour; heuristics are not authoritative classifications.
+
+**Status:** Requirement captured; Salesforce configuration evidence, mapping and resulting KPI effects still need validation.
+
 ## Source hierarchy
 
 - **Official organisational sources and Databricks:** authoritative for governed operational data and live schemas.
