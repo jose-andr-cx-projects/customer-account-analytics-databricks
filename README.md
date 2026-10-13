@@ -2,10 +2,10 @@
 
 ## Purpose
 
-Build a trustworthy, reusable analytics capability for City of Melbourne portal accounts and customer account management, comprising:
+Establish how customers experience City of Melbourne portal self-service — from account access through application start, progress, submission, outcomes and ongoing service management — using reliable, reusable analytics. This comprises:
 
-1. A Databricks AI/BI dashboard reproducing the validated, Databricks-origin portion of the existing Service Accounts Power BI dashboard.
-2. A Genie Agent allowing authorised users to ask natural-language questions about portal accounts and account management using the same validated business definitions.
+1. A Databricks AI/BI dashboard initially reproducing the validated, Databricks-origin portion of the existing Service Accounts Power BI dashboard, then extending to measurable stages of the portal self-service journey.
+2. A Genie Agent allowing authorised users to explore portal self-service and account management using the same validated business definitions, while distinguishing observations from unverified causes.
 
 This is a **fresh implementation**. The previous Genie Agent is historical evidence, not a configuration baseline.
 
