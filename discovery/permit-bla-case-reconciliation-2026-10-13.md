@@ -45,3 +45,31 @@ Counts are copied from the read-only Genie result for validation planning, not c
 ## Next contained task
 
 Using Salesforce setup, inspect **Business License Application → Application Status** source/values and the **Application Case** relationship. Confirm relevant identifiers, states, Applied Date and workflow transitions, then rerun one narrowly scoped Databricks reconciliation. No view/dashboard/agent writes until metric definitions pass parity testing.
+
+## Follow-up: source BLA lifecycle timestamps and corrected date semantics (13 October 2026)
+
+**Evidence level:** Genie Code reported read-only queries and successful execution, shared by the project lead. The exact final SQL, filters, timezone conversion, joins and underlying records have not been independently inspected here. Figures below are **reported findings, not certified metrics**.
+
+- Source located: `datahub_refined_source.salesforce.vwbusinesslicenseapplication` (reported 200 columns); unlike `datahub_datamart.customer_account_management.vwpermit`, it reportedly exposes `CreatedDate`, `AppliedDate`, `LastModifiedDate`, `Application_status_timestamp__c`, `PaymentDate`, `ApprovedDate`, `Is_Draft_Application__c`, `Submitted__c`, and `Created_By_Employee__c`.
+- **Prohibited substitution:** `vwpermit.period_start` and `period_end` describe permit validity, **never** application creation/submission. A prior query replacing three nonexistent `transaction_date` references with `period_start` gave an invalid transaction-time axis. Do not use that result.
+- The three repaired references in the reported SQL all address **application creation activity**: SELECT date axis = BLA `CreatedDate`; WHERE non-null `period_start` condition removed because source `CreatedDate` was reported 100% populated in the examined population; GROUP BY = `CAST(bla.CreatedDate AS DATE)`. Verify timezone and source query before adopting day grouping.
+- **Submission remains a candidate interpretation:** `Submitted__c = TRUE` together with `AppliedDate` may approximate formal submission; `AppliedDate` was reportedly prepopulated at creation even for Drafts. Do **not** use `AppliedDate` alone as a submission count, treat every matching CreatedDate/AppliedDate as proof of same-session submission, or assert the observed gaps establish all draft-to-submit histories.
+- **Case fallback:** `vwcase.date_time_opened` matched source `CreatedDate` by calendar date for 99.9% of a reported linked primary-parking subset (56,483 of 57,335 BLAs linked; 852 unlinked). This is a **linked-Case-created proxy**, not a source BLA creation event and not a submission date. Do not generalise this result to all services or eras.
+- Source timestamps: `Application_status_timestamp__c` reportedly covered 61.1% overall and does not establish complete status history. `ApprovedDate` reportedly had 0% coverage for parking; `PaymentDate` 63.0%. These are not universal journey anchors.
+- Reported primary-parking, customer-created sample: 7,623 Draft/false Submitted records, 7,978 Issued/true Submitted and 58 Pending Payment/true Submitted. Of Issued, 87.9% had the same calendar creation/applied date and 12.1% differed (reported average 18 days, median 5 days in the latter group). Validate sample filters, event semantics and time units before any conversion/time-to-submit metric.
+- A reported creation-date spike of 13,182 employee-created records on 29 March was interpreted as a migration batch. **Migration cause and year need confirmation** using metadata and operational evidence; do not label as organic customer portal starts or silently exclude them from all reporting.
+
+### Provisional metric mapping
+
+| Journey event / proposed metric | Candidate field(s) | Readiness / caveat |
+| --- | --- | --- |
+| BLA record created | Source BLA `CreatedDate` | Candidate for **application record creation**; portal/customer initiation requires channel/employee and migration exclusion validation |
+| Current draft stock | Source `Is_Draft_Application__c`, `Submitted__c`, current status | Candidate snapshot only; not historical draft-created cohorts or abandonment |
+| Submitted applications | `Submitted__c = TRUE` and `AppliedDate` | **Not yet certified** as submission date or event-history metric |
+| Case creation | `vwcase.date_time_opened` | Case-level proxy, separately labelled; check linkage and population |
+| Status progression / interruptions | Status history object or event log if available | **Unresolved**: current status timestamp is insufficient for full transitions |
+| Permit validity | `vwpermit.period_start` / `period_end` | Validity metrics only; exclude from activity/submission dates |
+
+### Follow-up validation
+
+Before dashboard charts or Genie metrics: inspect the **actual corrected SQL**, join uniqueness, status-field definitions/automation, calendar timezone, and source-to-datamart reconciliation. Verify whether `AppliedDate` changes at submission with historical evidence (not current-row correlations). Confirm employee/migration treatment and product classification. Keep Genesys/Contact Centre systemic-friction investigation separate until reviewed. No governed source changes authorised.
