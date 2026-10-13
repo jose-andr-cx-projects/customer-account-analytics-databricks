@@ -30,10 +30,14 @@ Inspect existing tables and views before deciding which to reuse or improve. Sou
 - Statutory and non-statutory account mix
 - New versus existing customer onboarding
 - Portal applications and transaction breakdowns
-- Eligible portal support per 100 transactions, only if source and denominator rules reconcile
+- Eligible portal support per 100 transactions, only if source and denominator rules reconcile; never use the retired `vwsupport_enriched` view
 - Broader account management exploration once the first dashboard is validated
 
 Do not presume all areas are available from the Databricks schema or in scope for the first release. Exclude GA4 and Genesys-origin measures from the initial replication unless separately approved.
+
+## Retired analytical source
+
+`vwsupport_enriched` is decommissioned **from this project's analytical scope** and must not be used in the dashboard, Genie Agent, metric definitions or discovery candidate list. This is a logical exclusion, not approval to drop the physical Databricks view. Confirm dependencies and ownership before any physical decommissioning.
 
 ## Salesforce Permit vs BLA workflow — discovery requirement
 
@@ -69,8 +73,8 @@ Never commit raw customer data, credentials, secrets, query result exports, sens
 
 ## Current status
 
-**Initiated — discovery pending.** No Databricks schema audit, Power BI parity validation, Genie configuration or production deployment is represented as complete.
+**Discovery reported 13 October 2026; source mappings and Power BI parity not yet validated.** No Genie configuration or production deployment is represented as complete.
 
 ## Next action
 
-Recover the latest Power BI model or template and run a read-only schema inventory of `datahub_datamart.customer_account_management` in Databricks Genie Code. Then prepare a scoped source-to-metric mapping before making changes.
+Validate the Salesforce Permit application case vs BLA workflow using service configuration and Databricks schema metadata. Establish customer transaction versus internal processing case grain before changing measures or views.
