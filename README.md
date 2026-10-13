@@ -33,7 +33,19 @@ Inspect existing tables and views before deciding which to reuse or improve. Sou
 - Eligible portal support per 100 transactions, only if source and denominator rules reconcile; never use the retired `vwsupport_enriched` view
 - Broader account management exploration once the first dashboard is validated
 
-Do not presume all areas are available from the Databricks schema or in scope for the first release. Exclude GA4 and Genesys-origin measures from the initial replication unless separately approved.
+Do not presume all areas are available from the Databricks schema or in scope for the first release. Exclude Genesys-origin measures from the initial replication unless separately approved.
+
+## GA4 on-demand behavioural evidence
+
+GA4 analytics may be supplied on demand to complement governed Databricks/Salesforce business records. No standing GA4 ingestion, permanent data join or additional integration is required for the initial release.
+
+- **Databricks/Salesforce**: authoritative application, account, case and outcome events.
+- **GA4**: website engagement, navigation, device mix and funnel events, only where configured and evidenced.
+- **Synthesis**: compare compatible service, timeframe and journey-stage slices. Keep separate denominators, identities and collection limitations visible.
+- **Genie**: query governed Databricks metrics; contextual GA4 analysis can be reviewed alongside its answers. Do not imply Genie has access to GA4 unless it has been deliberately and securely integrated.
+- Do not infer abandonment, user identity, cause or transaction conversion from page views or sessions alone.
+
+Use GA4 as diagnostic evidence when a specific self-service question warrants it, avoiding ongoing manual reporting overhead.
 
 ## Retired analytical source
 
