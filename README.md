@@ -4,7 +4,7 @@
 
 Establish how customers experience City of Melbourne portal self-service — from account access through application start, progress, submission, outcomes and ongoing service management — using reliable, reusable analytics. This comprises:
 
-1. A Databricks AI/BI dashboard initially reproducing the validated, Databricks-origin portion of the existing Service Accounts Power BI dashboard, then extending to measurable stages of the portal self-service journey.
+1. A Databricks AI/BI dashboard measuring the portal customer experience across Digital Access, Customer Activity, Customer Friction and Journey Outcomes. The former Power BI model is a reference for comparable measures, not a mandatory implementation baseline.
 2. A Genie Agent allowing authorised users to explore portal self-service and account management using the same validated business definitions, while distinguishing observations from unverified causes.
 3. A Customer Account Management Datamart enhancement specification for the data-owning team, documenting validated CX reporting gaps and reusable, governed improvements.
 
@@ -12,18 +12,17 @@ This is a **fresh implementation**. The previous Genie Agent is historical evide
 
 ## Data scope
 
-Initial catalog and schema: `datahub_datamart.customer_account_management`.
+**Implementation decision, 15 October 2026:** Build the dashboard now using available read-only views in `datahub_refined` and, where needed, `datahub_refined_source.salesforce`. Do not wait for Datamart enhancements, and do not simply transplant older Power BI metric definitions. Source reads and dashboard SQL datasets are permitted; changes to production sources are not.
 
-Prefer the highest suitable reusable layer, beginning with `datahub_datamart.customer_account_management`, then relevant `datahub_refined` views, then authorised source views such as `datahub_refined_source.salesforce`. Source suitability depends on event meaning, grain, completeness and quality, not layer name alone. Inspect existing tables and views before deciding which to reuse or improve. Source-system records and governed data remain in Databricks and their authorised systems of record.
+The dashboard's four areas are **Digital Access, Customer Activity, Customer Friction and Journey Outcomes**. Customer Friction has three investigation signals: **Process Interruptions** (FIR, repeat FIR, delays and lingering applications); **Access Barriers** (account/login and identity support); and **Recovery Effort** (repeat contact, rework and unresolved issues). These are domains for investigation, not a composite friction score or proof of root cause.
 
-## Initial delivery sequence
+## Implementation sequence
 
-1. **Baseline:** inventory Power BI measures, filters, DAX, Power Query lineage and relationships; identify Databricks-origin measures only.
-2. **Audit:** inspect schema objects for purpose, grain, duplicates, joins, coverage, freshness, reliability and performance.
-3. **Specify gaps:** for each required CX indicator, record Datamart coverage, verified deficiencies, source-layer evidence, a proposed governed enhancement, owner decision and acceptance tests. Propose changes to data owners; do not modify shared sources as part of discovery.
-4. **Implement:** use suitable governed Datamart objects where available; only use clearly labelled, read-only interim SQL datasets when essential, and track their intended replacement by Datamart enhancements. Reconcile comparable Power BI baselines without carrying over semantically invalid definitions.
-5. **Query:** configure a Genie Agent against validated data/metrics, with instructions and tested example questions.
-6. **Validate:** run numerical parity, question-answer, permission, caveat and regression checks before use. Submit enhancement specifications for data-owner review and rerun tests after governed changes are released.
+1. **Model and validate:** establish customer experience questions, event grains, eligibility, timestamps, source mappings and coverage using refined/source views.
+2. **Build:** create dashboard SQL datasets and visualisations now; verify weighted measures, reporting dates and denominators. Keep provisional signals clearly identified.
+3. **Expand:** implement additional access, activity, friction and outcome measures as their data definitions pass targeted tests.
+4. **Assess Datamart enhancements:** once the CX dashboard model is demonstrated, specify reusable governed facts, joins, transformations, quality tests and migration needs for DataHub owners.
+5. **Align Genie:** reuse validated metric definitions and test Genie's question-answer behaviour; do not assert deployment before it happens.
 
 ## Candidate subject areas — validate against Power BI
 
@@ -69,13 +68,13 @@ During read-only discovery:
 
 ## Datamart enhancement deliverable
 
-The dashboard is intended to use the Customer Account Management Datamart as its trusted reporting layer. A second formal project output is a **Customer Account Management Datamart enhancement specification** for data owners. This is a request and validation artefact, not permission to change production data.
+The dashboard is **being built from refined/source views now**. After the model is established, a formal subsequent deliverable is a **Customer Account Management Datamart enhancement specification** for data owners to assess what should move to the governed layer. Datamart changes do not block current dashboard implementation. This is a request artefact, not approval to change production data.
 
 For each proposed enhancement capture: customer experience question and journey/friction signal; existing Datamart view, fields and grain; specific missing capability; read-only evidence from refined/source layers; required fact, event, field or relationship and business logic; event date and eligible population; relevant completeness/privacy and lineage caveats; proposed priority; owner and approval status; and aggregate reconciliation/acceptance tests. Prefer reusable event facts and canonical mappings over separate hardcoded KPI columns.
 
-**First candidate CA-01, application status-transition history:** Existing `datahub_datamart.customer_account_management` metadata exposes current Case/application status and lifecycle date fields but has no confirmed event-level FIR history. A search of accessible `datahub_refined` metadata for named Case/status-history views returned none. The Salesforce source `datahub_refined_source.salesforce.vwcasehistory` exposes candidate status transitions and timestamps. Propose a governed, Case-linked transition fact with application/BLA mapping, transition timestamp, old/new status and suitable service classification, subject to confirming grain, access, ordering, coverage, status semantics and join cardinality. Potential downstream indicators are FIR incidence, repeat FIR, FIR status duration and status loops. **Status: enhancement candidate, not approved and not yet validated for episode-duration calculation.**
+**First candidate CA-01, application status-transition history:** Existing `datahub_datamart.customer_account_management` metadata exposes current Case/application status and lifecycle date fields but has no confirmed event-level FIR history. A search of accessible `datahub_refined` metadata for named Case/status-history views returned none. The Salesforce source `datahub_refined_source.salesforce.vwcasehistory` exposes candidate status transitions and timestamps. Propose a governed, Case-linked transition fact with application/BLA mapping, transition timestamp, old/new status and suitable service classification, subject to confirming grain, access, ordering, coverage, status semantics and join cardinality. Potential downstream indicators are FIR incidence, repeat FIR, FIR status duration and status loops. **Status: enhancement candidate, not approved.** Source episode duration was calculated subsequently, but remains provisional due to open episodes, current-status mismatches and episode-only duration coverage.
 
-DataHub/data-owner review determines implementation scope, governance and timetable. Until a governed source is available, any interim query-based dashboard indicator must be marked with its evidence status, owner and retirement/migration condition. Do not use `vwsupport_enriched`.
+DataHub/data-owner review determines implementation scope, governance and timetable. Dashboard datasets can be built directly on refined/source views during this implementation phase; record source, grain, logic and evidence status, and assess later Datamart migration after the model stabilises. Do not use `vwsupport_enriched`.
 
 ## Source hierarchy
 
@@ -97,8 +96,10 @@ Never commit raw customer data, credentials, secrets, query result exports, sens
 
 ## Current status
 
-**Discovery reported 13 October 2026; source mappings and Power BI parity not yet validated.** No Genie configuration or production deployment is represented as complete.
+**Dashboard build underway, 15 October 2026.** In Databricks AI/BI dashboard `Portal Self-Service Experience | CX Analytics`, page `Customer Experience Overview`, dataset `cx_process_interruptions` was created and executed successfully. It groups by Case creation month and Salesforce service name and contains eligible Case counts, FIR 1+ Case counts, FIR 2+ Case counts and rates. Current dataset also has a `median_fir_days` column that is a median of Case-level medians: **do not use this field as an overall FIR episode-duration KPI**.
 
-## Next action
+Independent source-level SQL reproduced **24,745 eligible Cases**, **6,286 FIR Cases**, **695 repeat FIR Cases**, **25.40% FIR incidence** and **2.81% repeat incidence**. The Case-level calculation is available as dashboard custom measure `FIR Incidence %` with expression `100.0 * SUM(fir_cases) / NULLIF(SUM(eligible_cases), 0)`. User confirmed measure creation succeeded; its final rendered Counter value was not separately captured.
 
-Validate the Salesforce Permit application case vs BLA workflow using service configuration and Databricks schema metadata. Establish customer transaction versus internal processing case grain before changing measures or views.
+Separately, FIR status history checks reported 7,141 entry transitions, 6,939 exit transitions and zero missing timestamps; sequencing reported zero consecutive entry/exit anomalies and zero timestamp ties, plus one orphan exit. Episode calculation returned **6,938 completed**, **203 no observed exit**, **171 currently still FIR**, **32 status mismatches** (27 Closed, 5 In Progress), median completed episode **5.86 calendar days** and 75th percentile **18.98 days**. This duration is *provisional*: calculated per completed episode, not customer response time; open episodes excluded.
+
+**Next action:** return to the draft dashboard (which autosaves). Finish configuring and visually checking the FIR Incidence Counter, then build the remaining validated Process Interruptions visuals. Do not publish the dashboard until the initial page and metric presentation are reviewed. Capture additional Datamart requirements only after model development, with CA-01 as the first candidate. No production source changes or Genie deployment claimed.
