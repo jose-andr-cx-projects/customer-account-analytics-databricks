@@ -129,6 +129,10 @@ Never commit raw customer data, credentials, secrets, query result exports, sens
 - Genie reproduces validated figures for an agreed set of questions and explains limitations.
 - Data/table changes are reviewed for downstream impact before deployment.
 
+## Ongoing business validation and data gaps
+
+Maintain one living [Service Account business validation and data-gap log](discovery/sa-business-validation-and-data-gaps.md), recording observed exceptions, unresolved owner questions, evidence, KPI effects, next validation tests and decisions. Use it to prioritise dashboard model checks and later Datamart enhancement requests; do not assume source inconsistencies are errors before business validation.
+
 ## Current status
 
 **Dashboard build underway, 15 October 2026.** In Databricks AI/BI dashboard `Portal Self-Service Experience | CX Analytics`, page `Customer Experience Overview`, dataset `cx_process_interruptions` was created and executed successfully. It groups by Case creation month and Salesforce service name and contains eligible Case counts, FIR 1+ Case counts, FIR 2+ Case counts and rates. Current dataset also has a `median_fir_days` column that is a median of Case-level medians: **do not use this field as an overall FIR episode-duration KPI**.
