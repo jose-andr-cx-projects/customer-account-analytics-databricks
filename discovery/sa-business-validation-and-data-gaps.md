@@ -55,6 +55,15 @@
 | SA-APP-03 | Salesforce BLA `ApplicationType` is an action classification (New / Extend / Amend), not a service/permit taxonomy; `ApplicationCategory` has no populated values in the aggregate. | **Do not filter to `ApplicationType = 'Permit'`** or exclude amendments/extensions. Next inspect existing Datamart `vwpermit.category` and `permit_type` and service mapping before proposing any permit-only scope. | Classification gap recorded; contained source inspection |
 | SA-APP-04 | BLA source has 135,039 rows in this run; prior `vwpermit` discovery saw 134,365 rows at another time. | Different snapshot dates and potentially mapping/filter differences; **do not treat the count difference as established missing records**. Log for later reconciliation if it affects dashboard scope. | Observation, deferred |
 
+### Datamart application category findings (19 October 2026)
+
+User-executed grouping of `datahub_datamart.customer_account_management.vwpermit` by `category`: `Permit` holds **120,033** records and distinct `application_id` values across **33 distinct `permit_type` identifiers**. Other recorded categories include Skip Bins (4,532), Mobile plant equipment (1,825), Exclusion area/drop zone (1,192), Location of works (1,080), Waste Bin (884), crane/equipment/construction categories and two JSON-like category values (8 and 5 records). These category labels are source data, not a verified taxonomy of permit eligibility.
+
+| ID | Observation / issue | Impact / decision | Status |
+| --- | --- | --- | --- |
+| SA-APP-05 | `vwpermit.category='Permit'` identifies a large, distinct subset (120,033) but many other categories may still be permit-related operational services. | Use category exactly as stored for an initial Permit-only **reporting filter**, **retain all categories in the base application model**, and avoid representing the subset as all permit-related CoM activity. | Reporting scope choice; taxonomy gap logged |
+| SA-APP-06 | `vwpermit.category` contains JSON-like configuration strings (two observed groups of 8 and 5 records), alongside readable labels. | Expose as recorded, exclude from presentation-friendly grouped labels until a governed category mapping is available; no ad hoc manual recoding. | Known category quality gap; deferred |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
