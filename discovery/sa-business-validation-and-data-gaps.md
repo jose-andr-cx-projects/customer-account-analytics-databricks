@@ -46,6 +46,15 @@
 | SA-REL-02 | Salesforce BLA exposes `AccountId` and `ApplicationCaseId` as well as `CoM_Account__c`, `Share_Account__c`, `Body_Corporate_Account__c`. | Account references may represent distinct business roles; choosing the wrong field could misattribute portal activity to customer segments. | Preserve role-specific fields; do not coalesce IDs into one assumed customer key. | Known semantic gap; deferred unless join needed |
 | SA-REL-03 | Case-account association completeness remains a limitation noted in earlier discovery; account IDs can be null on Cases. | Joining Case activity to Accounts may omit activity and bias account-segment comparisons. | Make unmatched/unattributable Cases explicit when account-linked reporting is introduced. | Known coverage gap; deferred |
 
+## BLA application classification discovery (19 October 2026)
+
+**Evidence:** User-executed group by `ApplicationType`, `ApplicationCategory` on `datahub_refined_source.salesforce.vwbusinesslicenseapplication` (135,039 rows): New 94,838; Extend 33,085; Amend 7,114; null 2. `ApplicationCategory` is null throughout returned groups. These are record counts and current status flag distributions, not submission event counts.
+
+| ID | Observation / issue | Impact / decision | Status |
+| --- | --- | --- | --- |
+| SA-APP-03 | Salesforce BLA `ApplicationType` is an action classification (New / Extend / Amend), not a service/permit taxonomy; `ApplicationCategory` has no populated values in the aggregate. | **Do not filter to `ApplicationType = 'Permit'`** or exclude amendments/extensions. Next inspect existing Datamart `vwpermit.category` and `permit_type` and service mapping before proposing any permit-only scope. | Classification gap recorded; contained source inspection |
+| SA-APP-04 | BLA source has 135,039 rows in this run; prior `vwpermit` discovery saw 134,365 rows at another time. | Different snapshot dates and potentially mapping/filter differences; **do not treat the count difference as established missing records**. Log for later reconciliation if it affects dashboard scope. | Observation, deferred |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
