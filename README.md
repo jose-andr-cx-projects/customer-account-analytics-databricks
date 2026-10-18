@@ -16,6 +16,27 @@ This is a **fresh implementation**. The previous Genie Agent is historical evide
 
 The dashboard's four areas are **Digital Access, Customer Activity, Customer Friction and Journey Outcomes**. Customer Friction has three investigation signals: **Process Interruptions** (FIR, repeat FIR, delays and lingering applications); **Access Barriers** (account/login and identity support); and **Recovery Effort** (repeat contact, rework and unresolved issues). These are domains for investigation, not a composite friction score or proof of root cause.
 
+## Service Account model naming convention
+
+**Decision, 19 October 2026:** Use the prefix `sa_` for every newly defined analytical model component and dashboard SQL dataset. **SA means Service Account**, the City of Melbourne **digital self-service portal**, not a Salesforce account object, service account credential, or the CX organisational branch. CX remains the business perspective and measurement objective, not a dataset prefix.
+
+Proposed logical model components (to be validated before implementation):
+
+| Dataset | Grain | Role |
+| --- | --- | --- |
+| `sa_application` | One BusinessLicenseApplication (BLA) | Creation, current lifecycle state, submission and outcomes |
+| `sa_case` | One Salesforce Case | Application processing, enquiries and linkage |
+| `sa_status_event` | One status transition | Progression, FIR and loops |
+| `sa_fir_episode` | One observed FIR entry/exit episode | Duration and censoring flags |
+| `sa_account` | One verified account or portal-user key | Digital access and onboarding |
+| `sa_service` | One validated service key | Consistent service filtering |
+| `sa_reporting_period` | One calendar/reporting period | Financial-quarter comparisons |
+| `sa_process_interruptions` | Period × service aggregate, subject to final model | FIR and repeat-FIR rates |
+| `sa_quarterly_performance` | Reporting quarter × validated dimensions | Quarterly performance measures |
+| `sa_trend_forecast` | Forecast period × measure × model version | Predictions and uncertainty, after backtesting |
+
+Do not rename original Databricks operational views. The dashboard dataset `cx_process_interruptions` already exists and is a **legacy draft artefact**: retain it and its dependencies until a validated `sa_process_interruptions` replacement is created and visuals migrated. No Databricks rename or dataset migration has occurred from this documentation change.
+
 ## Implementation sequence
 
 1. **Model and validate:** establish customer experience questions, event grains, eligibility, timestamps, source mappings and coverage using refined/source views.
