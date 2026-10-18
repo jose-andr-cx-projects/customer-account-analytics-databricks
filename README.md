@@ -43,6 +43,14 @@ Proposed logical model components (to be validated before implementation):
 
 Do not rename original Databricks operational views. The dashboard dataset `cx_process_interruptions` already exists and is a **legacy draft artefact**: retain it and its dependencies until a validated `sa_process_interruptions` replacement is created and visuals migrated. No Databricks rename or dataset migration has occurred from this documentation change.
 
+## Target architecture decision: Option A (19 October 2026)
+
+**Approved direction:** Retain and improve `datahub_datamart.customer_account_management` as the established governed reporting layer. Reuse trustworthy account categories, portal enablement definitions, service mappings and other Datamart semantics; extend with validated source/refined events and relationships where the existing views are insufficient. Do not replace the full Datamart or port Power BI DAX blindly.
+
+**Delivery separation:** During development, construct the `sa_` measurement model and dashboard with suitable existing Datamart views plus read-only `datahub_refined` / `datahub_refined_source.salesforce` where necessary. After source, grain, date and metric validation, prepare targeted Datamart enhancement requests for data owners. The target state uses governed Datamart definitions. No production source/view modifications are authorised.
+
+**First assessment:** Inventory and profile `datahub_datamart.customer_account_management.vwaccount` as the baseline for the whole CRM Account population and portal enablement. Preserve all account types while differentiating CRM Account IDs from portal identities/users. Reconcile `customer_portal`, `first_account_portal_on_date`, `new_or_existing`, `onboarding_type`, `account_record_type` and `created_date` with Power BI intent and refined/source fields. Investigate the previously reported 31-record discrepancy between enabled accounts and New/Existing totals before certifying rates. No additional calculated columns or derived classifications without observed field evidence.
+
 ## Implementation sequence
 
 1. **Model and validate:** establish customer experience questions, event grains, eligibility, timestamps, source mappings and coverage using refined/source views.
