@@ -30,6 +30,22 @@
 - Retain the Organisation account inconsistency (SA-AM-02) as a documented, deferred gap; do not launch further validation merely because it exists.
 - Add new gaps to this log as they are found. Investigate only when necessary for dashboard functionality, interpretation or a deliberate DataHub enhancement decision.
 
+## Account-to-Case-to-Application schema discovery (19 October 2026)
+
+**Evidence:** User-run `system.information_schema.columns` query on `datahub_datamart.customer_account_management.vwaccount`, `vwcase`, `vwpermit`, and `datahub_refined_source.salesforce.vwbusinesslicenseapplication`. This establishes field availability **only**, not referential integrity, match coverage, cardinality or business meaning.
+
+- Datamart account → case candidate: `vwaccount.account_id = vwcase.account_id`.
+- Datamart case → permit candidate: `vwcase.case_id = vwpermit.case_id`; `vwpermit.application_id` provides a separate application key.
+- Salesforce BLA candidates: `AccountId`, `ApplicationCaseId`; `CoM_Account__c`, `Share_Account__c`, `Body_Corporate_Account__c` also exist and may carry different account roles.
+- BLA `Submitted__c` and `Application_status_timestamp__c` exist, but field existence does not establish historical submission event semantics.
+- Contact names, email and phone fields appear in the source; they are **not necessary** for the initial relationship map and should not be included in shared analytics datasets.
+
+| ID | Observation / issue | Business / technical implication | Dashboard treatment | Status |
+| --- | --- | --- | --- | --- |
+| SA-REL-01 | Datamart `vwaccount.account_id`, `vwcase.account_id` and `vwpermit.case_id` support a possible Account → Case → Permit linkage. | Key availability alone does not guarantee a Case corresponds to a unique BLA or that every Case has an Account. | Use explicit keys and maintain Case/Application grains; do not create implicit one-to-one counts. | Candidate relationship; implement as needed |
+| SA-REL-02 | Salesforce BLA exposes `AccountId` and `ApplicationCaseId` as well as `CoM_Account__c`, `Share_Account__c`, `Body_Corporate_Account__c`. | Account references may represent distinct business roles; choosing the wrong field could misattribute portal activity to customer segments. | Preserve role-specific fields; do not coalesce IDs into one assumed customer key. | Known semantic gap; deferred unless join needed |
+| SA-REL-03 | Case-account association completeness remains a limitation noted in earlier discovery; account IDs can be null on Cases. | Joining Case activity to Accounts may omit activity and bias account-segment comparisons. | Make unmatched/unattributable Cases explicit when account-linked reporting is introduced. | Known coverage gap; deferred |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
