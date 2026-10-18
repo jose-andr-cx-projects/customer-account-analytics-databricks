@@ -66,6 +66,14 @@ User-executed grouping of `datahub_datamart.customer_account_management.vwpermit
 
 | SA-APP-07 | The remaining `vwpermit.category` values beyond `Permit` include Skip Bins, mobile plant, construction equipment/works, location categories and malformed configuration values. Their end-to-end treatment in CRM workflows, Datamart classifications, portal journeys and reporting has not been assessed. | **Future investigation:** Establish how each non-`Permit` category is processed and represented (BLA/Case/permit workflows, application versus issued permit, portal versus staff-assisted activity, service mapping), and whether it belongs in self-service experience reporting or should remain a separate segment. Avoid assuming the current `category='Permit'` filter captures all permit services. | Open: deferred investigation; does not block current dashboard development |
 
+### Application-to-BLA join failure (19 October 2026)
+
+**Observed:** User-executed query joining `datahub_datamart.customer_account_management.vwpermit p` to `datahub_refined_source.salesforce.vwbusinesslicenseapplication b` on `p.application_id = b.Id` returned **135,039 Datamart rows, zero matched BLA rows, and 135,039 unmatched**. Consequently `sa_application_monthly` (with `b.CreatedDate IS NOT NULL`) was empty. Do not treat the assumed keys as equivalent or deploy the previous joined SQL unchanged.
+
+| ID | Observation / issue | Dashboard impact / next action | Status |
+| --- | --- | --- | --- |
+| SA-REL-04 | `vwpermit.application_id` does **not** match Salesforce BLA `Id` in the current 135,039-row snapshot. Identifier semantics need documentation. | Blocks joining creation dates and BLA state into the monthly application dataset. Perform a **contained join-key discovery** testing `p.case_id = b.ApplicationCaseId`, including match coverage and whether joins multiply rows; use the existing Datamart as the reporting base (Option A). Do not infer or force the join. | Confirmed gap; targeted fix required |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
