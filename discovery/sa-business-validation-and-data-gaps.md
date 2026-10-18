@@ -2,7 +2,7 @@
 
 **Purpose:** Keep a concise, living record of observations, business-rule questions, source gaps, decisions and their impact on the Service Account digital self-service portal and wider CRM Account Management dashboard. This complements, but does not replace, the data owner's future Customer Account Management Datamart enhancement request.
 
-**Working rules:** Every entry states source/evidence, measurement impact, question, owner to consult, and status. Do not turn an unvalidated interpretation into a KPI definition. Reuse existing Datamart logic when validated; supplement with refined/source views during development (Option A). No production object changes authorised.
+**Operating rule (19 October 2026):** The existing Power BI dashboard is operational, and its current Datamart-derived account calculations are an **accepted working baseline** for the new Service Account dashboard. Do **not** systematically revalidate or rederive these calculations in DAX or refined/source data. When a discrepancy, limitation or unresolved business interpretation emerges during new dashboard work, **record it explicitly here** with its evidence, affected measure, likely dashboard impact, and whether it blocks delivery. Continue with existing Datamart definitions unless the gap directly prevents a requested capability or requires a decision. Logging a gap does not automatically create a validation exercise or block development. Targeted assessment belongs in the future DataHub enhancement backlog, with an owner/decision only when necessary. Supplement existing Datamart views with read-only refined/source data when new analytical capabilities genuinely require it (Option A). No production changes authorised.
 
 ## Account management and portal enablement (19 October 2026)
 
@@ -24,11 +24,11 @@
 | SA-AM-06 | Datamart is the existing gold reporting layer, target Option A. Detailed event history has been investigated in Salesforce source views. | Which new event facts / joins should DataHub add versus which existing gold definitions already meet need? | Continue dashboard read-only SQL build; request targeted Datamart enhancements after validation. | Decided approach, technical scope open |
 | SA-AM-07 | CRM Account may not equal a unique natural person or organisation; duplicate/merge and relationships were not validated. | How should customers with multiple accounts, mergers or duplicates be represented in CRM-wide and portal adoption figures? | Report account-record counts distinctly from unique customer counts; validate relationship/source definitions before customer-level measures. | Open: business |
 
-### Immediate next action
+### Working next action
 
-1. **Completed:** `new_or_existing` versus date-rule cross-tab reconciled all 40,195 ASSISTED accounts (25,962 NEW; 14,233 EXISTING).
-2. Carry the Organisation account inconsistency (SA-AM-02) as a documented gap. Do not launch a separate validation exercise at this stage.
-3. Inspect refined/source account/identity mappings before defining `sa_crm_account` and `sa_portal_identity` as certified datasets.
+- Proceed with `sa_crm_account` and portal reporting using the existing operational Datamart calculations as a baseline; the NEW/EXISTING cross-tab already agreed for 40,195 ASSISTED accounts (25,962 NEW; 14,233 EXISTING).
+- Retain the Organisation account inconsistency (SA-AM-02) as a documented, deferred gap; do not launch further validation merely because it exists.
+- Add new gaps to this log as they are found. Investigate only when necessary for dashboard functionality, interpretation or a deliberate DataHub enhancement decision.
 
 ## Other confirmed modelling gaps to track
 
