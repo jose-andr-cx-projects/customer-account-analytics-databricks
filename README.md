@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Establish how customers experience City of Melbourne portal self-service — from account access through application start, progress, submission, outcomes and ongoing service management — using reliable, reusable analytics. This comprises:
+Establish how City of Melbourne customers and account records are represented across Salesforce CRM, and how customers experience Service Account, the digital self-service portal, from access through application start, progress, submission, outcomes and ongoing service management, using reliable, reusable analytics. This comprises:
 
-1. A Databricks AI/BI dashboard measuring the portal customer experience across Digital Access, Customer Activity, Customer Friction and Journey Outcomes. The former Power BI model is a reference for comparable measures, not a mandatory implementation baseline.
+1. A Databricks AI/BI dashboard covering the full CoM CRM account population and measuring the Service Account digital portal experience across Digital Access, Customer Activity, Customer Friction and Journey Outcomes. The former Power BI model is a reference for comparable measures, not a mandatory implementation baseline.
 2. A Genie Agent allowing authorised users to explore portal self-service and account management using the same validated business definitions, while distinguishing observations from unverified causes.
 3. A Customer Account Management Datamart enhancement specification for the data-owning team, documenting validated CX reporting gaps and reusable, governed improvements.
 
@@ -28,12 +28,18 @@ Proposed logical model components (to be validated before implementation):
 | `sa_case` | One Salesforce Case | Application processing, enquiries and linkage |
 | `sa_status_event` | One status transition | Progression, FIR and loops |
 | `sa_fir_episode` | One observed FIR entry/exit episode | Duration and censoring flags |
-| `sa_account` | One verified account or portal-user key | Digital access and onboarding |
+| `sa_crm_account` | One Salesforce CRM Account Id | Full CoM CRM account population, account types, lifecycle and segmentation, irrespective of portal enablement |
+| `sa_portal_identity` | One verified portal user/identity key | Portal eligibility, first enablement, digital adoption and onboarding; map to CRM accounts only via validated relationships |
+| `sa_account_relationship` | One explicitly defined account/person/identity association | Map organisational, person and portal identities without assuming one-to-one cardinality |
 | `sa_service` | One validated service key | Consistent service filtering |
 | `sa_reporting_period` | One calendar/reporting period | Financial-quarter comparisons |
 | `sa_process_interruptions` | Period × service aggregate, subject to final model | FIR and repeat-FIR rates |
 | `sa_quarterly_performance` | Reporting quarter × validated dimensions | Quarterly performance measures |
 | `sa_trend_forecast` | Forecast period × measure × model version | Predictions and uncertainty, after backtesting |
+
+**Account Management scope:** The entire authorised City of Melbourne Salesforce CRM Account population is in scope, including accounts that have never used or been enabled for the portal. Keep the `sa_crm_account` denominator distinct from `sa_portal_identity`, customer-created BLA, and Cases. Account classifications (person, organisation, statutory and non-statutory), active/inactive interpretations, duplicates/merges, parent-child relationships, account creation and digital enablement must be derived from verified source semantics, not inferred from portal participation. Validate masked-data availability, distinct account keys, identity joins, effective dates and historical source coverage before publication. The known `datahub_datamart.customer_account_management.vwaccount` is a discovery reference only; use refined/source views for the initial build under the current refined-first implementation decision.
+
+**Reporting design:** Include an Account Management overview of the whole CRM population, with portal-enabled/adopted segments as clearly labelled subsets. Quarterly stock (as-of period end), new-account flow (created within the quarter), and digital enablement cohorts have different date/denominator rules. Do not backcast current-state flags as historical statuses or conflate Accounts with unique people. The four portal experience domains remain intact, but account management is a first-class foundation and reporting lens alongside them.
 
 Do not rename original Databricks operational views. The dashboard dataset `cx_process_interruptions` already exists and is a **legacy draft artefact**: retain it and its dependencies until a validated `sa_process_interruptions` replacement is created and visuals migrated. No Databricks rename or dataset migration has occurred from this documentation change.
 
