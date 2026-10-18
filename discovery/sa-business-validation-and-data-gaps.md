@@ -64,6 +64,8 @@ User-executed grouping of `datahub_datamart.customer_account_management.vwpermit
 | SA-APP-05 | `vwpermit.category='Permit'` identifies a large, distinct subset (120,033) but many other categories may still be permit-related operational services. | Use category exactly as stored for an initial Permit-only **reporting filter**, **retain all categories in the base application model**, and avoid representing the subset as all permit-related CoM activity. | Reporting scope choice; taxonomy gap logged |
 | SA-APP-06 | `vwpermit.category` contains JSON-like configuration strings (two observed groups of 8 and 5 records), alongside readable labels. | Expose as recorded, exclude from presentation-friendly grouped labels until a governed category mapping is available; no ad hoc manual recoding. | Known category quality gap; deferred |
 
+| SA-APP-07 | The remaining `vwpermit.category` values beyond `Permit` include Skip Bins, mobile plant, construction equipment/works, location categories and malformed configuration values. Their end-to-end treatment in CRM workflows, Datamart classifications, portal journeys and reporting has not been assessed. | **Future investigation:** Establish how each non-`Permit` category is processed and represented (BLA/Case/permit workflows, application versus issued permit, portal versus staff-assisted activity, service mapping), and whether it belongs in self-service experience reporting or should remain a separate segment. Avoid assuming the current `category='Permit'` filter captures all permit services. | Open: deferred investigation; does not block current dashboard development |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
