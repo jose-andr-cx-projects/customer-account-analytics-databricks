@@ -160,6 +160,14 @@ User-run status-version query on Salesforce BLA CDH history returned **85,281** 
 
 User-run read-only BLA CDH analysis linked first observed transition from a non-Issued version to Issued via `Name = vwpermit.application_id`, scoped to `vwpermit.category='Permit'`. Results: **30,884** observed Permit journeys; **0 negative durations**; p25 **3.44 days**, median **8.61 days**, p75 **22.97 days**, measured `CreatedDate` to first observed Issued `_effective_from` (calendar days). This is a **provisional benchmark for observed transitions**, not all issued permits. Historical left censoring, status-version ordering ties and event-time semantics are not yet certified. Interpret the percentiles only for this selected cohort; do not call these frictionless journeys without separate FIR/rework evidence.
 
+### FIR and time-to-Issued association (19 October 2026)
+
+**Evidence:** User-run exploratory SQL linked 30,884 Permit applications with observed BLA transitions into Issued to Salesforce CaseHistory FIR entries, grouped by total observed FIR count per Case. No FIR observed: **26,274** journeys, p25 **3.08**, median **7.61**, p75 **22.09** calendar days. One FIR: **4,032**, p25 **6.58**, median **12.61**, p75 **24.64**. Repeat FIR: **578**, p25 **14.41**, median **22.53**, p75 **39.75**. Median differences versus no-FIR are +5.00 days (one) and +14.92 days (repeat). The comparison is observational and not causal. The tested SQL counts all observed FIR transitions by Case without checking whether they occurred **before** the issuance timestamp; CaseHistory coverage is also limited and service mix may confound results.
+
+| ID | Observation / question | Dashboard impact / next action | Status |
+| --- | --- | --- | --- |
+| SA-FR-04 | Larger FIR counts are associated with longer creation-to-Issued journeys in the 30,884 observed Permit issuance cohort. | Strong candidate for Customer Friction → Journey Outcomes. Keep distributions and sample sizes, avoid causal claims, and compare within permit service/type. For a production metric, restrict FIR to on/before each first observed issuance event and report unknown CaseHistory coverage explicitly. | Exploratory finding; temporal scope and service mix not yet aligned |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
