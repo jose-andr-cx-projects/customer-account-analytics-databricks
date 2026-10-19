@@ -86,6 +86,16 @@ User-run aggregate over `datahub_datamart.customer_account_management.vwpermit` 
 | --- | --- | --- | --- |
 | SA-REL-05 | 8,321 of 8,428 missing-Case applications are Permit/Draft. 107 are not Permit/Draft, including 37 Permit/Submitted. | Account for drafts separately from Case-linked operational processing. Record non-draft exceptions as a known completeness gap; revisit only when lifecycle or linking functionality requires it. | Observed pattern; workflow cause unconfirmed, deferred |
 
+### Draft as the start of the portal application journey (19 October 2026)
+
+**Business clarification:** Draft is the expected **first status** for portal applications. Draft records are valuable early-journey evidence and a potential customer-friction signal; they must not be dropped merely because no Salesforce Case ID exists. The user confirmed this workflow interpretation. The observed concentration (8,321 Permit/Draft applications without Case IDs) is consistent with it but does not alone establish the moment when Cases are created.
+
+| ID | Observation / business interpretation | Dashboard design implication | Status |
+| --- | --- | --- | --- |
+| SA-FR-03 | Draft is the initial application status and potentially signals friction at the start of the digital self-service journey. | Retain draft records in `sa_application`, including those with no Case ID. Distinguish **current draft stock**, **drafts created by month**, **draft age**, and **draft-to-submitted progression** (latter requires status transitions or reliable submission event dates). Potential signals include prolonged draft state and repeat draft activity; do not interpret draft status alone as abandonment or customer difficulty. | Business interpretation confirmed; measurement definitions/evidence pending |
+
+**Analytical safeguard:** Snapshot `application_status='Draft'` is current state, not historical count of applications that entered Draft during a month. Application creation dates can anchor creation cohorts if linked correctly; transition timing and abandonment require further event evidence. Log missing history rather than inventing lifecycle timestamps. This insight belongs to the **Understand & Prepare / Apply & Submit** stages and the **Process Interruptions** domain.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
