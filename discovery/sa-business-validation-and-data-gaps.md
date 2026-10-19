@@ -131,6 +131,10 @@ User-run grouped join test on `vwpermit.application_id = vwbusinesslicenseapplic
 | SA-OUT-06 | What authoritative event identifies time when an application first becomes Issued? Can repeat/FIR/rework transitions be linked to BLA deterministically? | Required for time-to-Issued and direct/low-friction issued-journey metrics; status snapshot alone insufficient. | Future event-source enhancement; targeted investigation when implementing measure |
 | SA-OUT-07 | How should fastest paths be benchmarked across services and creation cohorts? | Use appropriate time-to-issued distribution, filter to comparable service cohorts, examine FIR/rework independently; avoid declaring one fastest record representative or equivalent to frictionless. | Design decision; dependent on SA-OUT-06 |
 
+### Issued event-source discovery (19 October 2026)
+
+A user-run query of `datahub_refined_source.salesforce.vwcasehistory` joined to `vwpermit.case_id`, filtered for status history values containing `issu` and `category='Permit'`, returned **no rows**. This shows the tested CaseHistory path cannot currently supply an Issued transition; it does **not** establish that BLA issuance events do not exist. Next contained investigation: discover a Salesforce BLA/application-history table in refined/source, then evaluate event semantics before computing Created-to-Issued durations. Do not substitute permit validity start or unverified current-status timestamp.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
