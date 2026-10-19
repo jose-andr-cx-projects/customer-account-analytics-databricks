@@ -139,6 +139,10 @@ A user-run query of `datahub_refined_source.salesforce.vwcasehistory` joined to 
 
 User-run `system.information_schema.tables` search found `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_history`, `vwpermit_stage__c_cdh_history`, and `vwbusinesslicense_cdh_history`, alongside Accela permit history views. These names establish source availability only; whether they contain status-change events, CDC snapshots, or reliable Issued timestamps is unverified. **Next scoped step:** inspect the BLA history view's columns and row examples before designing Created-to-Issued measures. Other history views are fallback candidates; no need for broad exploration yet.
 
+### BLA CDH history schema inspection (19 October 2026)
+
+User-shared complete column inventory for `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_history`. Relevant fields present: `Id`, `Name`, `Status`, `CreatedDate`, `ApprovedDate`, `Submitted__c`, `WasReturned`, `Application_status_timestamp__c`, `_effective_from`, `_effective_to`. These support a **candidate** version-based application timeline, but existence alone does not prove each status transition's timestamp corresponds to `_effective_from` or that history is complete. Next scoped test: count history versions and distinct statuses per BLA, then examine statuses and observed Issued version boundaries without using permit validity start. Keep `ApprovedDate` distinct from an actual issuance event until confirmed.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
