@@ -156,6 +156,10 @@ User-run aggregate on `datahub_refined_source.salesforce.vwbusinesslicenseapplic
 
 User-run status-version query on Salesforce BLA CDH history returned **85,281** applications ever observed Issued; **53,816** already Issued in their first recorded history version; **31,465** with an observed change from a non-Issued prior status to Issued. These groups sum to the ever-observed-Issued population in this query. The 53,816 first-version Issued applications are **left-censored**, not evidence of an issuance event at that first history date. The 31,465 transitions are promising for time-to-issued; confirm effective-from timestamp semantics and sequence ties before certification. Do not conflate ever-Issued historical population with currently Issued Datamart snapshot.
 
+### Provisional creation-to-Issued duration benchmark (19 October 2026)
+
+User-run read-only BLA CDH analysis linked first observed transition from a non-Issued version to Issued via `Name = vwpermit.application_id`, scoped to `vwpermit.category='Permit'`. Results: **30,884** observed Permit journeys; **0 negative durations**; p25 **3.44 days**, median **8.61 days**, p75 **22.97 days**, measured `CreatedDate` to first observed Issued `_effective_from` (calendar days). This is a **provisional benchmark for observed transitions**, not all issued permits. Historical left censoring, status-version ordering ties and event-time semantics are not yet certified. Interpret the percentiles only for this selected cohort; do not call these frictionless journeys without separate FIR/rework evidence.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
