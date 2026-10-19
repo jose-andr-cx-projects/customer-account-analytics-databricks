@@ -72,6 +72,8 @@ User-executed grouping of `datahub_datamart.customer_account_management.vwpermit
 
 | ID | Observation / issue | Dashboard impact / next action | Status |
 | --- | --- | --- | --- |
+**Follow-up result (19 October 2026):** Grouping BLA rows by `ApplicationCaseId` and joining to `vwpermit.case_id` returned 135,039 Datamart application rows; 8,428 with no Case ID; 126,611 matched; **zero** non-null Case IDs unmatched; 37 Datamart application rows have a Case matching more than one BLA (maximum 3). The 37 figure is affected **application rows**, not necessarily 37 unique Case IDs. This confirms the Case relationship has broad coverage but is not one-to-one. Do not use an arbitrary `ROW_NUMBER` choice to assign a BLA.
+
 | SA-REL-04 | `vwpermit.application_id` does **not** match Salesforce BLA `Id` in the current 135,039-row snapshot. Identifier semantics need documentation. | Blocks joining creation dates and BLA state into the monthly application dataset. Perform a **contained join-key discovery** testing `p.case_id = b.ApplicationCaseId`, including match coverage and whether joins multiply rows; use the existing Datamart as the reporting base (Option A). Do not infer or force the join. | Confirmed gap; targeted fix required |
 
 ## Other confirmed modelling gaps to track
