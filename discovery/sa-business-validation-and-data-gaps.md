@@ -116,6 +116,21 @@ User-run grouped join test on `vwpermit.application_id = vwbusinesslicenseapplic
 | SA-OUT-02 | `vwpermit.application_status` is a current-state snapshot, not an outcome timestamp. | Do not show quarterly issued/declined/withdrawn **events** or historical approval rates by application creation month. Future capability needs validated status history / outcome dates and cohort maturity. | Known time-series gap; future Datamart enhancement |
 | SA-OUT-03 | Status `Further Information Requested` appears in the current BLA/permit population, while prior FIR incidence was calculated from Salesforce CaseHistory status transitions. | Treat current FIR status stock and ever-had-FIR Case incidence as different signals and denominators. Never sum or equate them. | Measurement distinction documented |
 
+### Journey outcomes: positive/negative and fastest Issued paths (19 October 2026)
+
+**Business design direction:** Separate **application decision outcomes** from **permit continuation outcomes**, and examine the fastest low-interruption journey to Issued. These are reporting lenses, not replacements for source `application_status`.
+
+- Application decision: `Issued` as positive; `Declined` as adverse; `Withdrawn` as discontinued/unissued, **not necessarily failed**. Permit-category current snapshot: Issued **70,646**, Declined **2,217**, Withdrawn **5,246**. Do not treat draft/processing status as decided.
+- Permit continuation: `Renewed` (**452**) and `Extended` (**39**) as favourable continuation outcomes; `Lapsed` (**8,036**) as a potentially unfavourable or natural lifecycle ending. These are **current state** counts, not evidence of renewal eligibility, renewal events or failed renewal; do not calculate a success rate from these counts without a defined eligible population.
+- Fastest successful journey: investigate application CreatedDate → *actual issuance event date*, duration distribution (median, p25), direct path with **no recorded FIR/rework**, and service-level differentiation. **No validated issuance timestamp has yet been established** in this model. Do not substitute `period_start` (permit validity start) or `Application_status_timestamp__c` (semantic unverified) for issuance time. Use CaseHistory/BLA event evidence where validated, and keep immature cohorts separate. Fast ≠ frictionless by itself.
+
+| ID | Question / gap | Measurement impact / proposed treatment | Status |
+| --- | --- | --- | --- |
+| SA-OUT-04 | Does Declined versus Withdrawn represent negative decision versus customer-initiated discontinuation? | Keep both separately visible; do not combine into a binary failure rate without explanatory labels. | Provisional grouping; business context deferred |
+| SA-OUT-05 | When is Lapsed natural expiry versus an unsuccessful expected renewal? Which permits are renewal/extension eligible? | Keep Lapsed separate and compare with Renewed/Extended as **status composition**, not a continuation-success rate. | Known denominator/semantic gap; deferred |
+| SA-OUT-06 | What authoritative event identifies time when an application first becomes Issued? Can repeat/FIR/rework transitions be linked to BLA deterministically? | Required for time-to-Issued and direct/low-friction issued-journey metrics; status snapshot alone insufficient. | Future event-source enhancement; targeted investigation when implementing measure |
+| SA-OUT-07 | How should fastest paths be benchmarked across services and creation cohorts? | Use appropriate time-to-issued distribution, filter to comparable service cohorts, examine FIR/rework independently; avoid declaring one fastest record representative or equivalent to frictionless. | Design decision; dependent on SA-OUT-06 |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
