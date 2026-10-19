@@ -76,6 +76,16 @@ User-executed grouping of `datahub_datamart.customer_account_management.vwpermit
 
 | SA-REL-04 | `vwpermit.application_id` does **not** match Salesforce BLA `Id` in the current 135,039-row snapshot. Identifier semantics need documentation. | Blocks joining creation dates and BLA state into the monthly application dataset. Perform a **contained join-key discovery** testing `p.case_id = b.ApplicationCaseId`, including match coverage and whether joins multiply rows; use the existing Datamart as the reporting base (Option A). Do not infer or force the join. | Confirmed gap; targeted fix required |
 
+### Missing Case ID distribution by category and status (19 October 2026)
+
+User-run aggregate over `datahub_datamart.customer_account_management.vwpermit` where `case_id IS NULL`: **8,428** applications; **8,321 (98.7%)** are `category='Permit'` with `application_status='Draft'`. Other Permit statuses: Lapsed 42, Submitted 37, Withdrawn 24, Declined 1 (104 in total). Non-Permit: one Draft record with a JSON-like category, one withdrawn Crane <150 ton, and one lapsed Mobile plant equipment (3 in total). All returned category/status groups had count equal to distinct application count.
+
+**Interpretation boundary:** Strong association with drafts suggests Case creation may happen later in the workflow, but that mechanism is unconfirmed; missing Case ID does not prove missing Salesforce BLA. Do not label drafts as abandoned without elapsed-time/activity evidence. Preserve these records in the application foundation; avoid inner joins to Case for application population counts.
+
+| ID | Observation / issue | Dashboard impact / next action | Status |
+| --- | --- | --- | --- |
+| SA-REL-05 | 8,321 of 8,428 missing-Case applications are Permit/Draft. 107 are not Permit/Draft, including 37 Permit/Submitted. | Account for drafts separately from Case-linked operational processing. Record non-draft exceptions as a known completeness gap; revisit only when lifecycle or linking functionality requires it. | Observed pattern; workflow cause unconfirmed, deferred |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
