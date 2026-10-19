@@ -199,6 +199,10 @@ The previously observed FIR vs time-to-Issued comparison can now be presented un
 | --- | --- | --- | --- |
 | SA-SVC-01 | Five Permit-category application records have null `permit_type` / readable product name. | Keep an explicit Unmapped category in reporting, with no fabricated service identity; raise for a future Datamart quality enhancement if material. | Known mapping gap; deferred |
 
+### Journey Efficiency application-grain check (19 October 2026)
+
+User-executed Case/BLA history query for `category='Permit'` and first observed Issued transitions returned **30,884 rows, 30,884 distinct application IDs, zero duplicate rows and zero missing issuance-history timestamps**. This confirms the grain and timestamp completeness of the **tested permit-journey projection**, not a separate execution check against the saved Databricks dashboard dataset. Continue to label `_effective_from` issuance times as provisional until business-event semantics are approved; no new general source-validation work is required.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
