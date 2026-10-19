@@ -168,6 +168,27 @@ User-run read-only BLA CDH analysis linked first observed transition from a non-
 | --- | --- | --- | --- |
 | SA-FR-04 | Larger FIR counts are associated with longer creation-to-Issued journeys in the 30,884 observed Permit issuance cohort. | Strong candidate for Customer Friction → Journey Outcomes. Keep distributions and sample sizes, avoid causal claims, and compare within permit service/type. For a production metric, restrict FIR to on/before each first observed issuance event and report unknown CaseHistory coverage explicitly. | Exploratory finding; temporal scope and service mix not yet aligned |
 
+### FIR before issuance, compared within permit type (19 October 2026)
+
+User-run diagnostic limits CaseHistory FIR transitions to `CreatedDate >= BLA.CreatedDate` and `<= first observed BLA Issued _effective_from`, then reports p25/median/p75 elapsed days by `vwpermit.permit_type` and FIR group, with at least 20 journeys per displayed group. The output covers 33 displayed combinations and uses opaque Salesforce Product2 identifiers pending a readable service mapping.
+
+**Comparable groups with at least 100 journeys in both No-FIR and One-FIR:**
+
+| Permit type ID suffix | No FIR n / median days | One FIR n / median days | Difference days |
+| --- | ---: | ---: | ---: |
+| GVjm | 344 / 4.53 | 134 / 5.69 | +1.16 |
+| GVjp | 152 / 31.69 | 124 / 65.58 | +33.89 |
+| GVjq | 617 / 10.58 | 159 / 28.45 | +17.87 |
+| GVjr | 3,670 / 7.40 | 1,180 / 12.41 | +5.01 |
+| Gtb0 | 1,396 / 7.76 | 594 / 14.50 | +6.74 |
+| 1gUx | 17,117 / 6.96 | 1,362 / 9.50 | +2.54 |
+
+**Repeat FIR observed groups:** GVjr 301 / median 22.43 days; Gtb0 166 / 22.37 days; 1gUx 49 / 21.71 days. Within each of these three types, repeat-FIR median exceeds one-FIR median, which exceeds no-FIR median. This is not a causal estimate. A separate type (`004eiEh`) has 37 No-FIR and 228 One-FIR observations and should not be compared as if the sample sizes were equivalent.
+
+| ID | Finding / gap | Dashboard implication | Status |
+| --- | --- | --- | --- |
+| SA-FR-05 | Within comparable permit types, recorded FIR before issuance is associated with longer median application-to-Issued time; repeated FIR also aligns with longer durations in 3 types with reported repeat groups. | Strong candidate for service-level benchmark visual. Retain sample sizes, quartiles, permit-type cohorts and timestamps; guard against CaseHistory coverage bias, complexity and cohort differences. Resolve readable `permit_type` service names before visual publication. | Exploratory evidence captured; mapping and production methodology open |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
