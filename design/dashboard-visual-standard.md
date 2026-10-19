@@ -34,3 +34,9 @@ For each visual record: business question; source dataset; chart type; x-axis di
 
 ## Implementation limits
 Design concept is a visual reference; Databricks supported controls decide actual appearance. Keep SQL datasets independent of presentation where practical. Reuse chart settings manually or via available dashboard duplication tooling rather than assuming a custom theme import exists.
+
+## Reusable exported theme
+
+The approved Databricks theme is stored at [`service-account-dashboard-theme.json`](service-account-dashboard-theme.json), derived from the dashboard's exported custom theme on 19 October 2026. Import into other Databricks AI/BI dashboards via the Theme settings upload control. Styling is shared, but individual chart axes, aggregations, formatting and layout still require chart configuration.
+
+Note: the exported theme contains palette, mappings, canvas/widget colours, padding and corner radius, but does **not** explicitly contain widget margin, shadow, font selections, or chart-specific bar rounding. Those are not guaranteed portable properties of the export. The `No FIR observed` blue and `One FIR` green are categorical distinctions from the reference chart; green does not denote favourable FIR.
