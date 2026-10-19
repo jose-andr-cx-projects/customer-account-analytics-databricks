@@ -189,6 +189,16 @@ User-run diagnostic limits CaseHistory FIR transitions to `CreatedDate >= BLA.Cr
 | --- | --- | --- | --- |
 | SA-FR-05 | Within comparable permit types, recorded FIR before issuance is associated with longer median application-to-Issued time; repeated FIR also aligns with longer durations in 3 types with reported repeat groups. | Strong candidate for service-level benchmark visual. Retain sample sizes, quartiles, permit-type cohorts and timestamps; guard against CaseHistory coverage bias, complexity and cohort differences. Resolve readable `permit_type` service names before visual publication. | Exploratory evidence captured; mapping and production methodology open |
 
+### Salesforce Product2 permit-service mapping (19 October 2026)
+
+User-executed read-only join `vwpermit.permit_type = datahub_refined_source.salesforce.vwproduct2.Id` returned readable `Name` values for populated identifiers in `category='Permit'`. High-volume mappings include Parking Permit **57,726**, Space Occupancy **19,098**, Busking **10,656**, Consent for Works **5,452**, Outdoor Dining **5,034**, Temporary Protective Structure **3,022**, Filming **2,924**, Out of Hours on Private Land **2,402**, and Construction Management Plan **2,375**. There are **five applications with null permit_type/name**. Preserve the key and source product name in the semantic service dimension; do not manually manufacture labels for null records.
+
+The previously observed FIR vs time-to-Issued comparison can now be presented under named services: Construction Management Plan medians 31.69 days no-FIR and 65.58 one-FIR; Temporary Protective Structure 10.58 / 28.45; Consent for Works 7.76 / 14.50 / 22.37 (repeat); Space Occupancy 7.40 / 12.41 / 22.43; Parking Permit 6.96 / 9.50 / 21.71; Out of Hours on Private Land 4.53 / 5.69. These figures are from the earlier observed-Issued cohort, **not** medians of every application counted in the Product2 mapping. Treat as observational, not causal.
+
+| ID | Observation | Dashboard impact | Status |
+| --- | --- | --- | --- |
+| SA-SVC-01 | Five Permit-category application records have null `permit_type` / readable product name. | Keep an explicit Unmapped category in reporting, with no fabricated service identity; raise for a future Datamart quality enhancement if material. | Known mapping gap; deferred |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
