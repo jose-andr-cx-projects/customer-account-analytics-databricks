@@ -106,6 +106,16 @@ User-run grouped join test on `vwpermit.application_id = vwbusinesslicenseapplic
 
 **Resolution of SA-REL-04:** Join-key gap resolved in current snapshot by `p.application_id = b.Name`. The missing Case relation remains a distinct, documented workflow/coverage observation (SA-REL-05), not missing BLA records. Previous `sa_application` / `sa_application_monthly` SQL that joined by `b.Id` must be replaced.
 
+## Journey Outcomes: current application status inventory (19 October 2026)
+
+**Evidence:** User-executed `COUNT(DISTINCT application_id)` by `vwpermit.category` and `application_status`. Initial reporting scope `category='Permit'` totals **120,033** applications: Issued **70,646**, Draft **30,845**, Lapsed **8,036**, Withdrawn **5,246**, Declined **2,217**, Pending Payment **1,456**, Submitted **517**, Renewed **452**, Further Information Requested **350**, In Progress **229**, Extended **39**. These are **current status counts**, not historical status-change event counts.
+
+| ID | Observation / question | Dashboard treatment | Status |
+| --- | --- | --- | --- |
+| SA-OUT-01 | Current statuses mix application processing (Draft, Submitted, In Progress, FIR, Pending Payment), recorded decisions (Issued, Declined, Withdrawn) and possible permit lifecycle statuses (Lapsed, Renewed, Extended). Their workflow semantics differ by service. | Initially display exact Datamart `application_status`; optional **provisional** status-group presentation only with explicit label. Do not classify Lapsed/Renewed/Extended as successes/failures without future business interpretation. | Known semantic gap; deferred |
+| SA-OUT-02 | `vwpermit.application_status` is a current-state snapshot, not an outcome timestamp. | Do not show quarterly issued/declined/withdrawn **events** or historical approval rates by application creation month. Future capability needs validated status history / outcome dates and cohort maturity. | Known time-series gap; future Datamart enhancement |
+| SA-OUT-03 | Status `Further Information Requested` appears in the current BLA/permit population, while prior FIR incidence was calculated from Salesforce CaseHistory status transitions. | Treat current FIR status stock and ever-had-FIR Case incidence as different signals and denominators. Never sum or equate them. | Measurement distinction documented |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
