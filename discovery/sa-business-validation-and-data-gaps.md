@@ -96,6 +96,10 @@ User-run aggregate over `datahub_datamart.customer_account_management.vwpermit` 
 
 **Analytical safeguard:** Snapshot `application_status='Draft'` is current state, not historical count of applications that entered Draft during a month. Application creation dates can anchor creation cohorts if linked correctly; transition timing and abandonment require further event evidence. Log missing history rather than inventing lifecycle timestamps. This insight belongs to the **Understand & Prepare / Apply & Submit** stages and the **Process Interruptions** domain.
 
+### Application reference format clarified (19 October 2026)
+
+User-shared sample of 30 Case-linked Permit records shows `vwpermit.application_id` is formatted `BLA-0000000044` etc., whereas Salesforce BLA `Id` is a Salesforce ID formatted `0f0...`. `vwpermit.case_id` and `BLA.ApplicationCaseId` match in the shown sample. `SavedApplicationRefId` is null in the sample. **Next candidate:** inspect Salesforce BLA `Name` (or other application-number field) for the `BLA-...` value and test match/cardinality before implementing a join. Draft records with populated Case IDs occur in the sample, so Case absence is not equivalent to Draft status.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
