@@ -74,7 +74,7 @@ User-executed grouping of `datahub_datamart.customer_account_management.vwpermit
 | --- | --- | --- | --- |
 **Follow-up result (19 October 2026):** Grouping BLA rows by `ApplicationCaseId` and joining to `vwpermit.case_id` returned 135,039 Datamart application rows; 8,428 with no Case ID; 126,611 matched; **zero** non-null Case IDs unmatched; 37 Datamart application rows have a Case matching more than one BLA (maximum 3). The 37 figure is affected **application rows**, not necessarily 37 unique Case IDs. This confirms the Case relationship has broad coverage but is not one-to-one. Do not use an arbitrary `ROW_NUMBER` choice to assign a BLA.
 
-| SA-REL-04 | `vwpermit.application_id` does **not** match Salesforce BLA `Id` in the current 135,039-row snapshot. Identifier semantics need documentation. | Blocks joining creation dates and BLA state into the monthly application dataset. Perform a **contained join-key discovery** testing `p.case_id = b.ApplicationCaseId`, including match coverage and whether joins multiply rows; use the existing Datamart as the reporting base (Option A). Do not infer or force the join. | Confirmed gap; targeted fix required |
+| SA-REL-04 | `vwpermit.application_id` is a BLA business reference and does **not** match Salesforce BLA `Id`. A direct join to Salesforce BLA `Name` matches all 135,039 records without duplication, including 8,428 without Case IDs. | Replace the incorrect SQL joins in both application datasets; preserve separate Salesforce record ID and business reference. | **Resolved: join verified in current snapshot** |
 
 ### Missing Case ID distribution by category and status (19 October 2026)
 
@@ -99,6 +99,12 @@ User-run aggregate over `datahub_datamart.customer_account_management.vwpermit` 
 ### Application reference format clarified (19 October 2026)
 
 User-shared sample of 30 Case-linked Permit records shows `vwpermit.application_id` is formatted `BLA-0000000044` etc., whereas Salesforce BLA `Id` is a Salesforce ID formatted `0f0...`. `vwpermit.case_id` and `BLA.ApplicationCaseId` match in the shown sample. `SavedApplicationRefId` is null in the sample. **Next candidate:** inspect Salesforce BLA `Name` (or other application-number field) for the `BLA-...` value and test match/cardinality before implementing a join. Draft records with populated Case IDs occur in the sample, so Case absence is not equivalent to Draft status.
+
+### BLA join resolved by application reference (19 October 2026)
+
+User-run grouped join test on `vwpermit.application_id = vwbusinesslicenseapplication.Name` returned **135,039 Datamart applications, 135,039 matched, zero unmatched, zero ambiguous reference matches, max one BLA row per reference**, including **all 8,428** records where `vwpermit.case_id IS NULL`. This establishes a complete unique current-snapshot linkage suitable for the `sa_application` foundation; `BLA.Id` is a Salesforce record ID, not the Datamart's `BLA-...` application reference. Keep these identifiers separate and retain drafts irrespective of Case availability.
+
+**Resolution of SA-REL-04:** Join-key gap resolved in current snapshot by `p.application_id = b.Name`. The missing Case relation remains a distinct, documented workflow/coverage observation (SA-REL-05), not missing BLA records. Previous `sa_application` / `sa_application_monthly` SQL that joined by `b.Id` must be replaced.
 
 ## Other confirmed modelling gaps to track
 
