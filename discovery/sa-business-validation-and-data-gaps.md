@@ -143,6 +143,15 @@ User-run `system.information_schema.tables` search found `datahub_refined_source
 
 User-shared complete column inventory for `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_history`. Relevant fields present: `Id`, `Name`, `Status`, `CreatedDate`, `ApprovedDate`, `Submitted__c`, `WasReturned`, `Application_status_timestamp__c`, `_effective_from`, `_effective_to`. These support a **candidate** version-based application timeline, but existence alone does not prove each status transition's timestamp corresponds to `_effective_from` or that history is complete. Next scoped test: count history versions and distinct statuses per BLA, then examine statuses and observed Issued version boundaries without using permit validity start. Keep `ApprovedDate` distinct from an actual issuance event until confirmed.
 
+### BLA history coverage profiling (19 October 2026)
+
+User-run aggregate on `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_history`: **135,730 distinct BLA IDs**, **433,650 version rows**, **110,619** BLAs with >1 version, **44,062** with >1 distinct observed status, **85,281** with at least one `Issued` version, and **2,802** with both `Draft` and `Issued` observed. `_effective_from` ranges **2025-02-17 13:04:46 UTC** through **2026-10-19 01:27:18 UTC** in this extraction. Multiple version rows do not necessarily indicate a status change. A small Draft→Issued observed overlap does not mean applications never passed through Draft: history may be incomplete for earlier transitions.
+
+| ID | Observation / question | Model consequence | Status |
+| --- | --- | --- | --- |
+| SA-OUT-08 | BLA history records multiple historical versions and Issued statuses, but the reliability of the first observed Issued `_effective_from` as the actual issuance event date has not been established. | Compare each application's first Issued version to the preceding version/status, and examine first-history-row Issued and status timestamp relationships; do not calculate certified time-to-issued until interpretation is sound. | Evidence discovered; event timestamp validation pending |
+| SA-OUT-09 | BLA history begins February 2025 in observed data; 85,281 applications have Issued observed, but only 2,802 have both Draft and Issued observed. | Clearly label left-censored cohorts and avoid treating first observed status as start of lifecycle; distinguish observed transitions from applications already Issued when history begins. | Known history coverage gap |
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
