@@ -135,6 +135,10 @@ User-run grouped join test on `vwpermit.application_id = vwbusinesslicenseapplic
 
 A user-run query of `datahub_refined_source.salesforce.vwcasehistory` joined to `vwpermit.case_id`, filtered for status history values containing `issu` and `category='Permit'`, returned **no rows**. This shows the tested CaseHistory path cannot currently supply an Issued transition; it does **not** establish that BLA issuance events do not exist. Next contained investigation: discover a Salesforce BLA/application-history table in refined/source, then evaluate event semantics before computing Created-to-Issued durations. Do not substitute permit validity start or unverified current-status timestamp.
 
+### Candidate BLA history sources discovered (19 October 2026)
+
+User-run `system.information_schema.tables` search found `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_history`, `vwpermit_stage__c_cdh_history`, and `vwbusinesslicense_cdh_history`, alongside Accela permit history views. These names establish source availability only; whether they contain status-change events, CDC snapshots, or reliable Issued timestamps is unverified. **Next scoped step:** inspect the BLA history view's columns and row examples before designing Created-to-Issued measures. Other history views are fallback candidates; no need for broad exploration yet.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
