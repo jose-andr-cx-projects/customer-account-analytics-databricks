@@ -152,6 +152,10 @@ User-run aggregate on `datahub_refined_source.salesforce.vwbusinesslicenseapplic
 | SA-OUT-08 | BLA history records multiple historical versions and Issued statuses, but the reliability of the first observed Issued `_effective_from` as the actual issuance event date has not been established. | Compare each application's first Issued version to the preceding version/status, and examine first-history-row Issued and status timestamp relationships; do not calculate certified time-to-issued until interpretation is sound. | Evidence discovered; event timestamp validation pending |
 | SA-OUT-09 | BLA history begins February 2025 in observed data; 85,281 applications have Issued observed, but only 2,802 have both Draft and Issued observed. | Clearly label left-censored cohorts and avoid treating first observed status as start of lifecycle; distinguish observed transitions from applications already Issued when history begins. | Known history coverage gap |
 
+### First observed BLA Issued transitions (19 October 2026)
+
+User-run status-version query on Salesforce BLA CDH history returned **85,281** applications ever observed Issued; **53,816** already Issued in their first recorded history version; **31,465** with an observed change from a non-Issued prior status to Issued. These groups sum to the ever-observed-Issued population in this query. The 53,816 first-version Issued applications are **left-censored**, not evidence of an issuance event at that first history date. The 31,465 transitions are promising for time-to-issued; confirm effective-from timestamp semantics and sequence ties before certification. Do not conflate ever-Issued historical population with currently Issued Datamart snapshot.
+
 ## Other confirmed modelling gaps to track
 
 | ID | Existing evidence | Impact / question | Status |
