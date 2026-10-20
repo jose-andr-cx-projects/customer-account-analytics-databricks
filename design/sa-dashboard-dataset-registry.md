@@ -109,3 +109,30 @@ Results of a user-executed read-only query reproducing the existing `sa_journey_
 Derived from grouped results: Issued applications Q4 4,923 and Q1 4,878 (-0.9%); observed any FIR 768/4,923 = 15.6% in Q4 and 712/4,878 = 14.6% in Q1. In Q1 the repeat-FIR median is approximately 3.2 times the no-FIR median (22.6 vs 7.1 days). This is an **observed association**, not evidence of FIR causation. Medians/P75 values cannot be combined to derive the overall median; query application-level journey rows to obtain overall quarter medians.
 
 Reporting guardrails: issued-quarter outcomes must not be described as outcomes for the same Q1 creation cohort, and permit-only/all-creator scope must be kept separate from customer-created BLA draft/start measures. The Issued-duration result excludes unfinished and non-Issued journeys. Compare similar service mixes and source coverage before interpreting small QoQ changes.
+
+## Validated service-name mapping — portal enablement and applications (20 October 2026)
+
+**Status: Validated for the tested datasets and populations; not a universally governed Salesforce service identifier.** Evidence: user-executed Databricks read-only reconciliation and uniqueness queries. Do not substitute Product2 ID for a service key.
+
+### Join contract
+
+1. Application: `datahub_datamart.customer_account_management.vwpermit.application_id` joins to BLA source `datahub_refined_source.salesforce.vwbusinesslicenseapplication.Name` where creation/employee flags are needed.
+2. Case bridge: `vwpermit.case_id = datahub_datamart.customer_account_management.vwcase.case_id`.
+3. Service catalogue: `UPPER(TRIM(vwcase.service_name)) = UPPER(TRIM(datahub_datamart.customer_account_management.vwservice_enablement.service_name))`.
+4. Portal availability for an application: require application `CreatedDate >= first_portal_enable_date` for matched service. This establishes *service availability*, not proof of portal channel initiation.
+5. Catalogue `service_group` supplies reporting groups (PARKING, BUSINESS, CONSTRUCTION, COMMUNITY); do not join on Salesforce Case `service_group`, which uses different strings (for example PARKING PERMIT versus PARKING, BUSINESS PERMIT versus BUSINESS, CONSTRUCTION PERMIT versus CONSTRUCTION, SPORTS PERMIT versus COMMUNITY, STREET TRADING versus BUSINESS).
+6. `vwpermit.permit_type` contains Product2 IDs beginning `01t`; a direct join to the composite catalogue `service_key` had **0/33** distinct permit-type keys matched and is invalid.
+
+### Observed checks
+
+- The catalogue normalised `service_name` uniqueness test (multiple `service_key` or `service_group` values per normalised service name) returned **zero rows**. Validates one-to-one classification by normalised name **in the catalogue snapshot tested**, not eternal stability.
+- Q1 FY27 customer-created BLA applications (`Created_By_Employee__c = false`, BLA CreatedDate 1 Jul–30 Sep 2026): **6,986** distinct applications; **6,474** linked to a Case and matched a catalogue service by name; **0** Case-linked unmatched; **6,474** matched service's recorded enable date at or before application creation; **512** with no Case link. Of those unlinked, **509** current Draft, **2** current Submitted with `Submitted__c = false`, **1** Withdrawn with that flag false. Unlinked does not mean no `vwpermit` application row.
+- A broader Issued-status mapping diagnostic (`vwpermit.category = 'Permit'`, BLA CDH rows with Status='Issued' and `_effective_from` from 1 Apr to 30 Sep 2026) found **30,470** distinct applications, with **30,470 service matches** and **zero** missing Case, missing Case record or unmatched service.
+- **Critical scope boundary:** the 30,470 diagnostic counts any application with qualifying Issued-status history rows, **not** only the first observed transition to Issued used in `sa_journey_efficiency`. The latter previously yielded **4,923 Q4 FY26 and 4,878 Q1 FY27** eligible issued journeys. Mapping must be retested/reconciled against that exact narrower journey set before calling its coverage 100%.
+
+### Reuse and safeguards
+
+- Normalise names with `UPPER(TRIM(...))`; use catalogue `service_group` as a classification *after* the unique-name match.
+- Keep join diagnostics (missing Case, missing service match, multiple service names per Case, multiple application rows) when extending to new cohorts. The successful tests do not establish universal temporal uniqueness or immutable service names.
+- When reporting 'applications lodged through self-service', employee-created flag and enabled service availability are **proxies**; neither proves a submission event/channel. Use historical submission semantics if the headline requires lodgement.
+- Do not modify original Datamart/source views. Reuse this mapping in analytical SQL as justified; document any scope, date or case-join exclusions.
