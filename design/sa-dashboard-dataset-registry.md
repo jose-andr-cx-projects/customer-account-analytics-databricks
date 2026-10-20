@@ -222,3 +222,36 @@ Both quarter totals reconcile exactly with the existing FIR-group duration compa
 **Priority leads, not causal conclusions:** Outdoor Dining n=218 median 9.2 (Q4 n=100 median 22.4) markedly improved as throughput increased; Parklets n=88 median 40.5 (Q4 28.4) deteriorated. Construction Management Plans n=46 median 48.7/P75 87.5; Construction Parking n=32 median 34.6/P75 51.6 (higher variance with smaller n); Consent for Works n=356 median 13.5 (Q4 11.5). The largest parking service n=2,925 median 6.7 but P75 26.1 (Q4 22.6), signalling a growing longer-duration tail. Service requirements, mix, cohort age, source status history and distinct processing pathways may explain differences; don't claim preventable delays or improvements based solely on these figures. Extreme medians at n<=~9 should not become executive headlines.
 
 **Next investigation (optional):** target specific service's Q1 FIR occurrence and duration strata (especially Parklets, Construction Management Plans, Construction Parking and Outdoor Dining); check relevant service processes before interpreting cause. The Q1 executive slide may instead proceed with existing evidence.
+
+## Four priority individual services — FIR-stratified Issued journeys (20 October 2026)
+
+**Status:** User-run read-only Q4 FY26 and Q1 FY27 result, reconciled to previously validated per-service first-observed-Issued journeys. Same `sa_journey_efficiency` provisional duration and Case-history FIR status-entry definition; all creators, Issued-only.
+
+| Service | Quarter | FIR group | Issued | Median days | P75 days |
+|---|---|---|---:|---:|---:|
+| Construction Management Plans | Q4 FY26 | No FIR | 19 | 25.7 | 36.6 |
+| Construction Management Plans | Q4 FY26 | One FIR | 27 | 66.5 | 103.5 |
+| Construction Management Plans | Q4 FY26 | Repeat FIR | 2 | 86.5 | 91.7 |
+| Construction Management Plans | Q1 FY27 | No FIR | 16 | 10.5 | 35.6 |
+| Construction Management Plans | Q1 FY27 | One FIR | 24 | 57.5 | 85.3 |
+| Construction Management Plans | Q1 FY27 | Repeat FIR | 6 | 89.7 | 100.3 |
+| Outdoor Dining | Q4 FY26 | No FIR | 83 | 21.4 | 32.8 |
+| Outdoor Dining | Q4 FY26 | One FIR | 17 | 35.2 | 74.4 |
+| Outdoor Dining | Q1 FY27 | No FIR | 210 | 8.5 | 20.7 |
+| Outdoor Dining | Q1 FY27 | One FIR | 7 | 56.7 | 89.4 |
+| Outdoor Dining | Q1 FY27 | Repeat FIR | 1 | 61.4 | 61.4 |
+| Parking Permits | Q4 FY26 | No FIR | 2,874 | 7.0 | 23.0 |
+| Parking Permits | Q4 FY26 | One FIR | 199 | 9.3 | 17.2 |
+| Parking Permits | Q4 FY26 | Repeat FIR | 5 | 21.7 | 25.7 |
+| Parking Permits | Q1 FY27 | No FIR | 2,749 | 6.4 | 27.0 |
+| Parking Permits | Q1 FY27 | One FIR | 176 | 10.5 | 21.2 |
+| Parklets | Q4 FY26 | No FIR | 91 | 28.4 | 41.8 |
+| Parklets | Q1 FY27 | No FIR | 86 | 39.5 | 53.4 |
+| Parklets | Q1 FY27 | One FIR | 1 | 67.5 | 67.5 |
+| Parklets | Q1 FY27 | Repeat FIR | 1 | 288.3 | 288.3 |
+
+**Reconciliation:** Construction Management Plans Q4 48/Q1 46; Outdoor Dining Q4 100/Q1 218; Parking Permits Q4 3,078/Q1 2,925; Parklets Q4 91/Q1 88. For Q1, Parking repeat-FIR absent (=0); for Q4, Outdoor Dining repeat-FIR and Parklets one/repeat FIR absent (=0).
+
+**Key evidence:** Construction Management Plans Q1 any-FIR 30/46 (65.2%), median 10.5 days with no observed FIR, 57.5 with one, 89.7 with repeat (n=6). Outdoor Dining Q1 any-FIR 8/218 (3.7%) versus Q4 17/100 (17.0%); no-FIR median improved 21.4→8.5 days. Parklets Q1 86/88 no observed FIR; no-FIR median worsened 28.4→39.5 days and P75 41.8→53.4; one and repeat FIR each n=1, not inferential. Parking Permits Q1 2,749/2,925 no observed FIR; no-FIR median 7.0→6.4 days, P75 23.0→27.0 days. No observed FIR is not proof no follow-up; Case status history only. Do not infer causal impact of FIR, process change or service efficiency from this descriptive result. Issued-quarter cohorts differ from application-creation cohorts.
+
+**Next direction:** distinguish information-request-related friction (Construction Management Plans) from no-recorded-FIR long tails (Parklets, Parking), and review what changed in Outdoor Dining using service/process owner evidence. No new dashboard measures required for descriptive Q1 narrative.
