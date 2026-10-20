@@ -136,3 +136,22 @@ Reporting guardrails: issued-quarter outcomes must not be described as outcomes 
 - Keep join diagnostics (missing Case, missing service match, multiple service names per Case, multiple application rows) when extending to new cohorts. The successful tests do not establish universal temporal uniqueness or immutable service names.
 - When reporting 'applications lodged through self-service', employee-created flag and enabled service availability are **proxies**; neither proves a submission event/channel. Use historical submission semantics if the headline requires lodgement.
 - Do not modify original Datamart/source views. Reuse this mapping in analytical SQL as justified; document any scope, date or case-join exclusions.
+
+## Issued journey duration by mapped service group — Q1 FY27 comparison (20 October 2026)
+
+**Status:** User-run read-only Databricks aggregate reconciled to existing `sa_journey_efficiency` totals. Reporting period is **first observed Issued transition quarter**. Population: `vwpermit.category = 'Permit'` across all creators/channels; this is not the customer-created-only cohort.
+
+Uses the existing BLA CDH history first-Issued-transition method and the validated service-name mapping `vwpermit.case_id → vwcase.case_id → UPPER(TRIM(vwcase.service_name)) = UPPER(TRIM(vwservice_enablement.service_name))` to obtain catalogue `service_group`. The existing source-date and join-cardinality caveats remain; results are not certified universal end-to-end service durations.
+
+| Service group | Q4 Issued | Q1 Issued | Q4 median days | Q1 median days | Q4 P75 days | Q1 P75 days |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| BUSINESS | 385 | 466 | 13.6 | 10.5 | 32.8 | 34.6 |
+| CONSTRUCTION | 1,418 | 1,408 | 9.3 | 8.8 | 16.5 | 17.5 |
+| PARKING | 3,120 | 3,004 | 7.2 | 6.7 | 22.2 | 25.5 |
+| **Total count only** | **4,923** | **4,878** | — | — | — | — |
+
+Both quarter totals reconcile exactly with the existing FIR-group duration comparison (4,923 Q4; 4,878 Q1). Do not calculate an overall median by averaging grouped medians.
+
+**Interpretation:** Median creation-to-Issued duration decreased for each service group (Parking -0.5 day; Business -3.1 days; Construction -0.5 day), while group P75 duration increased (Parking +3.3 days; Business +1.8 days; Construction +1.0 day). The distribution tail warrants investigation; neither change proves a causal performance improvement/deterioration. Mix within groups, status history and process complexity remain possible confounders. The separate FIR comparison is across all services and is not an adjusted within-service effect.
+
+**Next bounded step:** if needed for Q1 results, split FIR frequency *within* the mapped service groups using unchanged application-level journey definitions. Do not rework the base model unless a demonstrated gap blocks reporting.
