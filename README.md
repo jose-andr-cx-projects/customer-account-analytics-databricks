@@ -59,6 +59,24 @@ Do not rename original Databricks operational views. The dashboard dataset `cx_p
 4. **Assess Datamart enhancements:** once the CX dashboard model is demonstrated, specify reusable governed facts, joins, transformations, quality tests and migration needs for DataHub owners.
 5. **Align Genie:** reuse validated metric definitions and test Genie's question-answer behaviour; do not assert deployment before it happens.
 
+
+## Dashboard Genie Agent — business-context setup checklist (deferred)
+
+**Status:** To do when configuring the dashboard Genie Agent. Not implemented or deployed. Do not interrupt the current dashboard build.
+
+**Authoritative source:** [Salesforce Service Configuration — Architecture Translator](https://github.com/jose-andr-cx-projects/cx-service-experience-mapping/blob/main/docs/architecture-translator-salesforce-service-configuration.md). Related [Databricks Salesforce Service Context](https://github.com/jose-andr-cx-projects/cx-service-experience-mapping/blob/main/docs/databricks-salesforce-service-context.md).
+
+- [ ] Publish a short versioned business-context reference, linked to the authoritative GitHub document, in a Databricks workspace location discoverable by analysts.
+- [ ] Add source-authority rules to Genie: Product2 is core Salesforce service configuration; Case Service Name derives from Product2; Customer Intelligence derived Service Group is distinct from operational source data and the Service Catalogue.
+- [ ] Add the *separate* Portal Analytics reporting classification: vwpermit.case_id → vwcase.case_id; normalise Case service_name with UPPER(TRIM(...)); match vwservice_enablement.service_name; use its service_group for Parking/Business/Construction/Community reporting; preserve vwcase.service_group unchanged as operational Case service group. Do not conflate this mapping with Customer Intelligence grouping.
+- [ ] Register tested join relationships, field descriptions, trusted SQL examples and quality constraints in Genie's supported configuration; validate join cardinality and preserve unmatched records.
+- [ ] Link a concise human-readable About this data / Service definitions reference from Customer Journey Insights and the Genie setup.
+- [ ] Run agent QA questions verifying each classification's lineage, correct service joins, reporting group counts, non-fan-out, proper Q1/Q4 cohort anchors, FIR interpretation and provisional duration limitations.
+- [ ] Record Genie configuration location, reference version, QA evidence, owner and approval status in this repository. Mark complete only after validation.
+- [ ] Assess GitHub-to-Databricks publishing automation later, after the manual business-context contract is stable and reviewed; do not maintain two independent sources of truth.
+
+**Scope:** Deferred Genie configuration; no changes to live Salesforce/DataHub views or already validated dashboard metrics.
+
 ## Candidate subject areas — validate against Power BI
 
 - Enabled portal accounts and adoption over time
