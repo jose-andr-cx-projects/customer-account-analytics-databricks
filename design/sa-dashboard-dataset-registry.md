@@ -47,3 +47,19 @@ The two trend visuals are configured to ignore one another's cross-filtering. Th
 ## Remaining lightweight inventory work
 
 When each existing dataset is next used, capture its SQL-derived **source, grain, date anchor, key measure fields, filters and caveats** here and map it to a dashboard visual. No wholesale revalidation and no new SQL by default. Check the existing dataset first; only propose additional logic for a demonstrated gap.
+
+
+## Draft friction dataset — confirmed SQL review (20 October 2026)
+
+**Runtime dataset:** `sa_draft_friction_monthly` (user-supplied SQL, not independently executed in this session).
+
+- **Source and join:** `datahub_datamart.customer_account_management.vwpermit p` joined to `datahub_refined_source.salesforce.vwbusinesslicenseapplication b` on `p.application_id = b.Name`.
+- **Population:** `p.application_status = 'Draft'`, valid `b.CreatedDate`, creation date on or before `CURRENT_DATE()`. This dataset is **not filtered** to customer-created records and must not be assumed to represent solely digital self-service customers.
+- **Grain:** `cohort_month × category × permit_type`; cohort anchor is BLA `CreatedDate`.
+- **Measures:** `current_drafts = COUNT(DISTINCT application_id)`; `drafts_older_than_30_days = COUNT_IF(draft_age_days > 30)`; `drafts_older_than_90_days = COUNT_IF(draft_age_days > 90)`; `median_draft_age_days = ROUND(PERCENTILE_APPROX(draft_age_days, 0.5),1)`.
+- **Date semantics:** `draft_age_days = DATEDIFF(CURRENT_DATE(), CAST(b.CreatedDate AS DATE))` is elapsed **age of a currently Draft application**, *not* verified continuous time in Draft. It changes on each execution and cannot reconstruct a past quarter-end snapshot. Monthly grouping is creation cohort, not historical Draft count in that month.
+- **Aggregation caution:** `COUNT_IF` assumes one joined row per application; verify join grain before treating these as distinct application counts. Recompute overall age medians from application-level rows; do not average monthly medians.
+- **Q1 slide:** creation-cohort drafts can supplement activity, but current-state observations must have an explicit as-of date, must distinguish customer-created from all-application populations, and cannot be called abandonment.
+- **Duration connection:** Application start = BLA `CreatedDate`; current unfinished age = creation to observation date; completed Issued duration lives in `sa_journey_efficiency` and uses first observed Issued transition. Submission event date remains unconfirmed. The two time measures describe different populations and must not be combined into a single duration statistic.
+
+**Next validation (contained):** inspect data availability for a fixed observation date / historical snapshot and confirm application-level draft grain only if needed for the Q1 slide. No model SQL modifications have been made.
