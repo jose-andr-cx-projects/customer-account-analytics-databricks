@@ -155,3 +155,32 @@ Both quarter totals reconcile exactly with the existing FIR-group duration compa
 **Interpretation:** Median creation-to-Issued duration decreased for each service group (Parking -0.5 day; Business -3.1 days; Construction -0.5 day), while group P75 duration increased (Parking +3.3 days; Business +1.8 days; Construction +1.0 day). The distribution tail warrants investigation; neither change proves a causal performance improvement/deterioration. Mix within groups, status history and process complexity remain possible confounders. The separate FIR comparison is across all services and is not an adjusted within-service effect.
 
 **Next bounded step:** if needed for Q1 results, split FIR frequency *within* the mapped service groups using unchanged application-level journey definitions. Do not rework the base model unless a demonstrated gap blocks reporting.
+
+## Service group × FIR frequency — Issued journeys Q1 FY27 vs Q4 FY26 (20 October 2026)
+
+**Status:** User-executed read-only grouped result, reconciled with the existing `sa_journey_efficiency` Issued-quarter counts. Definition: BLA first observed Issued transition, `vwpermit.category = 'Permit'`, Case history FIR entry count between creation and Issued, using validated Case `service_name` to portal catalogue `service_group` mapping. All creators included; creation-time semantics remain provisional.
+
+| Quarter | Service | FIR group | Issued | Median days | P75 days |
+| --- | --- | --- | ---: | ---: | ---: |
+| Q4 FY26 | BUSINESS | No FIR observed | 309 | 13.6 | 31.4 |
+| Q4 FY26 | BUSINESS | One FIR | 73 | 13.4 | 38.4 |
+| Q4 FY26 | BUSINESS | Repeat FIR | 3 | 14.5 | 74.6 |
+| Q1 FY27 | BUSINESS | No FIR observed | 398 | 9.4 | 33.3 |
+| Q1 FY27 | BUSINESS | One FIR | 64 | 13.5 | 36.3 |
+| Q1 FY27 | BUSINESS | Repeat FIR | 4 | 61.4 | 118.7 |
+| Q4 FY26 | CONSTRUCTION | No FIR observed | 932 | 7.6 | 12.5 |
+| Q4 FY26 | CONSTRUCTION | One FIR | 403 | 13.7 | 27.6 |
+| Q4 FY26 | CONSTRUCTION | Repeat FIR | 83 | 22.5 | 39.5 |
+| Q1 FY27 | CONSTRUCTION | No FIR observed | 945 | 7.5 | 13.6 |
+| Q1 FY27 | CONSTRUCTION | One FIR | 369 | 14.4 | 26.5 |
+| Q1 FY27 | CONSTRUCTION | Repeat FIR | 94 | 22.5 | 36.4 |
+| Q4 FY26 | PARKING | No FIR observed | 2,914 | 7.0 | 22.9 |
+| Q4 FY26 | PARKING | One FIR | 201 | 9.3 | 17.2 |
+| Q4 FY26 | PARKING | Repeat FIR | 5 | 21.7 | 25.7 |
+| Q1 FY27 | PARKING | No FIR observed | 2,823 | 6.5 | 26.1 |
+| Q1 FY27 | PARKING | One FIR | 181 | 10.4 | 21.2 |
+| Q1 FY27 | PARKING | Repeat FIR | 0 | — | — |
+
+**Reconciliation:** Q4 BUSINESS 385 + CONSTRUCTION 1,418 + PARKING 3,120 = 4,923; Q1 BUSINESS 466 + CONSTRUCTION 1,408 + PARKING 3,004 = 4,878. No observed Q1 Parking repeat-FIR row: zero in this Issued cohort, not evidence of zero recurrence among unfinished applications.
+
+**Interpretation:** Construction shows a substantial graded association (Q1 medians 7.5, 14.4 and 22.5 days for 0, 1, 2+ FIR). Other drivers affect the duration tail: Parking without FIR had Q1 P75 26.1 days, while Business without FIR had 33.3. Business repeat-FIR Q1 n=4 and Q4 n=3 are too small to generalise. Any-FIR share among *Issued* applications changed: Parking 206/3,120 (6.6%) to 181/3,004 (6.0%); Construction 486/1,418 (34.3%) to 463/1,408 (32.9%); Business 76/385 (19.7%) to 68/466 (14.6%). Do not conflate with FIR incidence among all started applications or attribute causality to FIR. Median and P75 measure completed Issued journeys only; provisional application-created timestamp.
