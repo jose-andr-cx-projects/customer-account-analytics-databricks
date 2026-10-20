@@ -184,3 +184,41 @@ Both quarter totals reconcile exactly with the existing FIR-group duration compa
 **Reconciliation:** Q4 BUSINESS 385 + CONSTRUCTION 1,418 + PARKING 3,120 = 4,923; Q1 BUSINESS 466 + CONSTRUCTION 1,408 + PARKING 3,004 = 4,878. No observed Q1 Parking repeat-FIR row: zero in this Issued cohort, not evidence of zero recurrence among unfinished applications.
 
 **Interpretation:** Construction shows a substantial graded association (Q1 medians 7.5, 14.4 and 22.5 days for 0, 1, 2+ FIR). Other drivers affect the duration tail: Parking without FIR had Q1 P75 26.1 days, while Business without FIR had 33.3. Business repeat-FIR Q1 n=4 and Q4 n=3 are too small to generalise. Any-FIR share among *Issued* applications changed: Parking 206/3,120 (6.6%) to 181/3,004 (6.0%); Construction 486/1,418 (34.3%) to 463/1,408 (32.9%); Business 76/385 (19.7%) to 68/466 (14.6%). Do not conflate with FIR incidence among all started applications or attribute causality to FIR. Median and P75 measure completed Issued journeys only; provisional application-created timestamp.
+
+## Individual-service journey duration Q4 FY26 vs Q1 FY27 (20 October 2026)
+
+**Status:** User-executed read-only service-level result using established `sa_journey_efficiency` first-observed-Issued-transition definition and validated Case name → portal catalogue service-group mapping. Reporting period = Issued transition quarter, all Permit creators/channels, only Issued; duration semantics provisional. Values are per-service medians/P75 from application rows, not average group medians.
+
+| Group | Service (short label) | Q4 n | Q1 n | Q4 median days | Q1 median days | Q4 P75 | Q1 P75 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| BUSINESS | Outdoor dining (footpath) | 100 | 218 | 22.4 | 9.2 | 35.7 | 21.8 |
+| BUSINESS | Parklets | 91 | 88 | 28.4 | 40.5 | 41.8 | 53.4 |
+| BUSINESS | Busking | 74 | 57 | 3.5 | 3.6 | 17.6 | 13.6 |
+| BUSINESS | Filming | 41 | 45 | 9.7 | 12.0 | 15.5 | 21.4 |
+| BUSINESS | Vehicle access | 16 | 23 | 2.9 | 3.4 | 6.7 | 6.6 |
+| BUSINESS | Portable advertising board | 19 | 9 | 22.3 | 35.5 | 50.2 | 46.2 |
+| BUSINESS | Seasonal street trading | 7 | 9 | 38.6 | 18.7 | 97.5 | 26.6 |
+| BUSINESS | Private parking/enforcement agreements | 9 | 5 | 12.5 | 21.4 | 13.2 | 27.4 |
+| BUSINESS | Commercial waste collection | 3 | 4 | 237.4 | 4.6 | 268.5 | 8.5 |
+| BUSINESS | Street trading tenders/contracts | 23 | 4 | 14.5 | 17.6 | 22.4 | 101.6 |
+| BUSINESS | Real estate pointer board | 1 | 2 | 7.4 | 13.5 | 7.4 | 19.4 |
+| BUSINESS | Waste bin permit | 1 | 2 | 10.4 | 220.4 | 10.4 | 226.5 |
+| CONSTRUCTION | Space occupancy | 822 | 746 | 7.6 | 7.5 | 13.7 | 13.8 |
+| CONSTRUCTION | Consent for works | 319 | 356 | 11.5 | 13.5 | 18.5 | 19.6 |
+| CONSTRUCTION | Temporary protective structure | 113 | 132 | 12.6 | 10.5 | 26.6 | 21.5 |
+| CONSTRUCTION | Out of hours on private land | 79 | 77 | 3.7 | 4.4 | 9.3 | 6.6 |
+| CONSTRUCTION | Construction management plan | 48 | 46 | 38.2 | 48.7 | 91.7 | 87.5 |
+| CONSTRUCTION | Construction parking | 24 | 32 | 16.8 | 34.6 | 28.6 | 51.6 |
+| CONSTRUCTION | Vehicle crossing | 10 | 12 | 20.4 | 9.6 | 36.1 | 17.8 |
+| CONSTRUCTION | Skip | 2 | 6 | 1.5 | 3.4 | 3.4 | 5.6 |
+| CONSTRUCTION | Notification of completion — permanent reinstatement | 0 | 1 | — | 15.6 | — | 15.6 |
+| CONSTRUCTION | Legal point of discharge report | 1 | 0 | 104.5 | — | 104.5 | — |
+| PARKING | Parking permit application | 3,078 | 2,925 | 7.3 | 6.7 | 22.6 | 26.1 |
+| PARKING | Community parking | 15 | 53 | 7.6 | 8.6 | 16.4 | 15.6 |
+| PARKING | Medical and healthcare parking | 27 | 26 | 4.3 | 4.2 | 9.6 | 7.4 |
+
+**Reconciliation:** BUSINESS 385 Q4/466 Q1; CONSTRUCTION 1,418 Q4/1,408 Q1; PARKING 3,120 Q4/3,004 Q1 = 4,923 Q4/4,878 Q1; all match the prior grouped duration results, supporting one service classification per included journey for tested periods.
+
+**Priority leads, not causal conclusions:** Outdoor Dining n=218 median 9.2 (Q4 n=100 median 22.4) markedly improved as throughput increased; Parklets n=88 median 40.5 (Q4 28.4) deteriorated. Construction Management Plans n=46 median 48.7/P75 87.5; Construction Parking n=32 median 34.6/P75 51.6 (higher variance with smaller n); Consent for Works n=356 median 13.5 (Q4 11.5). The largest parking service n=2,925 median 6.7 but P75 26.1 (Q4 22.6), signalling a growing longer-duration tail. Service requirements, mix, cohort age, source status history and distinct processing pathways may explain differences; don't claim preventable delays or improvements based solely on these figures. Extreme medians at n<=~9 should not become executive headlines.
+
+**Next investigation (optional):** target specific service's Q1 FIR occurrence and duration strata (especially Parklets, Construction Management Plans, Construction Parking and Outdoor Dining); check relevant service processes before interpreting cause. The Q1 executive slide may instead proceed with existing evidence.
