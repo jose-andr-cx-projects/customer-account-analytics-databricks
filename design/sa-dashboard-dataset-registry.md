@@ -63,3 +63,16 @@ When each existing dataset is next used, capture its SQL-derived **source, grain
 - **Duration connection:** Application start = BLA `CreatedDate`; current unfinished age = creation to observation date; completed Issued duration lives in `sa_journey_efficiency` and uses first observed Issued transition. Submission event date remains unconfirmed. The two time measures describe different populations and must not be combined into a single duration statistic.
 
 **Next validation (contained):** inspect data availability for a fixed observation date / historical snapshot and confirm application-level draft grain only if needed for the Q1 slide. No model SQL modifications have been made.
+
+## BLA history quarter-end snapshots — observed test (20 October 2026)
+
+Source: `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_history`, user-run read-only query. Historical version selection used `CreatedDate < cutoff`, `_effective_from < cutoff`, and (`_effective_to >= cutoff` or null); reporting cutoffs were 2026-07-01 and 2026-10-01 at 00:00:00. Use a half-open interval in later refinements (`_effective_to > cutoff`) after verifying version boundary semantics.
+
+| Quarter end | Applications with valid history row | Multiple active versions | Status Draft | Submitted flag true |
+| --- | ---: | ---: | ---: | ---: |
+| 30 June 2026 | 121,013 | 0 | 28,492 | 85,592 |
+| 30 September 2026 | 132,890 | 0 | 31,003 | 94,555 |
+
+These are **all-application stock snapshots**, not customer-created quarterly cohorts; do not present changes as new quarterly draft or submission events. Version overlap was absent for matched application IDs, but **coverage against all eligible applications is not yet validated**. The submitted flag reflects the stored flag at cutoff, not a confirmed submission event date. Historical state reconstruction should use fixed cutoffs instead of the existing `sa_draft_friction_monthly` `CURRENT_DATE()` age for quarter-end comparisons.
+
+Next contained test: filter to customer-created applications **created within each quarter**, select their active BLA history version at that quarter's cutoff, then reconcile counts against the previously observed Q4 6,774 and Q1 6,986 application-created populations. Check states and missing history before calculating quarter-end draft shares or age.
