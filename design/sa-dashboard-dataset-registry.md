@@ -76,3 +76,19 @@ Source: `datahub_refined_source.salesforce.vwbusinesslicenseapplication_cdh_hist
 These are **all-application stock snapshots**, not customer-created quarterly cohorts; do not present changes as new quarterly draft or submission events. Version overlap was absent for matched application IDs, but **coverage against all eligible applications is not yet validated**. The submitted flag reflects the stored flag at cutoff, not a confirmed submission event date. Historical state reconstruction should use fixed cutoffs instead of the existing `sa_draft_friction_monthly` `CURRENT_DATE()` age for quarter-end comparisons.
 
 Next contained test: filter to customer-created applications **created within each quarter**, select their active BLA history version at that quarter's cutoff, then reconcile counts against the previously observed Q4 6,774 and Q1 6,986 application-created populations. Check states and missing history before calculating quarter-end draft shares or age.
+
+## Customer-created cohort quarter-end reconciliation (20 October 2026)
+
+Read-only Databricks results supplied by project lead. Cohorts: BLA `CreatedDate` within Q4 FY26 (Apr–Jun 2026) and Q1 FY27 (Jul–Sep 2026), `Created_By_Employee__c = false`, joined to `vwpermit` by BLA Name/application_id. Historical version selected at each quarter's end via BLA Id and effective intervals.
+
+| Measure | Q4 FY26 | Q1 FY27 |
+| --- | ---: | ---: |
+| Customer-created applications | 6,774 | 6,986 |
+| Matched to historical version | 6,670 | 6,874 |
+| Missing history at cutoff | 104 | 112 |
+| Status Draft at quarter-end | 2,514 | 2,575 |
+| Submitted flag true at quarter-end | 3,919 | 4,053 |
+
+Both created counts reconcile exactly to earlier quarter-level application activity. Historical coverage is about 98.4% of each cohort, not complete. With **all starts** as denominator, draft share was 37.11% in Q4 and 36.86% in Q1 (approximately -0.25 percentage points); submitted flag share was 57.85% and 58.02% respectively (approximately +0.17 percentage points). These are quarter-end status proportions, not historical submission-event conversion rates. Missing-history records remain in denominators; do not silently classify them as not Draft or not Submitted. Flag is not a validated submission event. Draft and Submitted figures should not be summed as an exhaustive state classification. The data is not restricted through an independently validated portal-origin channel signal.
+
+Next: investigate missing history and, if needed for the slide, age of Q1 drafts using *fixed* 2026-10-01 cutoff; connect to the existing `sa_journey_efficiency` Issued-duration measure without conflating all-applications and customer-created populations.
