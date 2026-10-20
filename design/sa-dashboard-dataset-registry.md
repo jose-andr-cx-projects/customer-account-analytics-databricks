@@ -92,3 +92,20 @@ Read-only Databricks results supplied by project lead. Cohorts: BLA `CreatedDate
 Both created counts reconcile exactly to earlier quarter-level application activity. Historical coverage is about 98.4% of each cohort, not complete. With **all starts** as denominator, draft share was 37.11% in Q4 and 36.86% in Q1 (approximately -0.25 percentage points); submitted flag share was 57.85% and 58.02% respectively (approximately +0.17 percentage points). These are quarter-end status proportions, not historical submission-event conversion rates. Missing-history records remain in denominators; do not silently classify them as not Draft or not Submitted. Flag is not a validated submission event. Draft and Submitted figures should not be summed as an exhaustive state classification. The data is not restricted through an independently validated portal-origin channel signal.
 
 Next: investigate missing history and, if needed for the slide, age of Q1 drafts using *fixed* 2026-10-01 cutoff; connect to the existing `sa_journey_efficiency` Issued-duration measure without conflating all-applications and customer-created populations.
+
+## Journey efficiency Q1 FY27 vs Q4 FY26 — observed results (20 October 2026)
+
+Results of a user-executed read-only query reproducing the existing `sa_journey_efficiency` logic: BLA CDH history first observed transition into Issued; joined to `vwpermit` (`category = 'Permit'`); Case status history FIR transitions between application creation and observed Issued timestamp. Grouped by **Issued event quarter**, not creation quarter. All eligible Permit applications, **not limited to customer-created**. Creation timestamp remains provisional because the source SQL derives `MIN(CreatedDate)` on rows identifying Issued transitions; do not certify end-to-end duration before its semantics are verified.
+
+| Quarter | FIR group | Issued applications | Median days creation to Issued | P75 days |
+| --- | --- | ---: | ---: | ---: |
+| Q4 FY26 | No FIR observed | 4,155 | 7.6 | 20.0 |
+| Q4 FY26 | One FIR | 677 | 12.5 | 25.7 |
+| Q4 FY26 | Repeat FIR | 91 | 21.7 | 39.5 |
+| Q1 FY27 | No FIR observed | 4,166 | 7.1 | 21.7 |
+| Q1 FY27 | One FIR | 614 | 13.5 | 25.3 |
+| Q1 FY27 | Repeat FIR | 98 | 22.6 | 42.6 |
+
+Derived from grouped results: Issued applications Q4 4,923 and Q1 4,878 (-0.9%); observed any FIR 768/4,923 = 15.6% in Q4 and 712/4,878 = 14.6% in Q1. In Q1 the repeat-FIR median is approximately 3.2 times the no-FIR median (22.6 vs 7.1 days). This is an **observed association**, not evidence of FIR causation. Medians/P75 values cannot be combined to derive the overall median; query application-level journey rows to obtain overall quarter medians.
+
+Reporting guardrails: issued-quarter outcomes must not be described as outcomes for the same Q1 creation cohort, and permit-only/all-creator scope must be kept separate from customer-created BLA draft/start measures. The Issued-duration result excludes unfinished and non-Issued journeys. Compare similar service mixes and source coverage before interpreting small QoQ changes.
