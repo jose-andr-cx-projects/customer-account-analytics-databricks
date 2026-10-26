@@ -1,0 +1,3 @@
+# Source and publishing contract
+
+Proposed CoM operating rules: Bitbucket for approved versioned Markdown where designated; Confluence for authoritative published context/decisions according to existing publishing process; Jira for delivery owners, statuses and dates; Miro for collaborative visuals; Teams transcripts supplied by José for discussion evidence. Do not assume cross-system parity, signed-off decisions or direct Bitbucket writes by Rovo. Request approval for consequential changes, provide minimal patches when native edits unavailable and read back committed results. Future Strategic OS intake will be deliberate and approved, not mirrored GitHub repositories.

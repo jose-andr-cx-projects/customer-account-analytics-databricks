@@ -1,5 +1,17 @@
 # Customer Account Analytics — Databricks
 
+## Bitbucket-native project navigation (2026-10-26)
+
+New CoM project architecture staged in GitHub for later import; verify live source in Bitbucket.
+
+- [Project overview](project-overview.md)
+- [Source and publishing contract](source-contract.md)
+- [Decision register](project-decisions.md)
+- [Evidence navigation](evidence/README.md)
+- [Next-step brief](delivery/next-steps.md)
+- [CX Project Companion](agent/companion.md)
+
+
 > **Bitbucket transition (26 October 2026):** This GitHub repository is an existing project reference, not the intended ongoing CoM source of truth. The Bitbucket-first operating architecture and controlled Strategic OS intake are staged in [CX portfolio transition](https://github.com/jose-andr-cx-projects/cx-portfolio-context/tree/main/bitbucket-transition). Before replacing any organisational records, compare against the latest approved Bitbucket/Confluence/Jira sources. No ongoing cross-platform mirroring is intended. This note does not change the project's substantive decisions or status.
 
 
