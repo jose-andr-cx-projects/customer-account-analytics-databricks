@@ -38,3 +38,23 @@ Of parking tickets issued, how many are paid, enter infringement review, enter d
 
 ## Decision
 Proceed with the best available **PEMS + Salesforce** proxy now; hold ticket-level paid-rate conclusions until the Pathway parent mapping is available and validated. No production Databricks sources modified.
+
+## Follow-up: 90-day review vs nomination proxy (2026-10-31)
+
+Databricks operator reran analysis using actual Salesforce review naming: `Service_Name LIKE 'Infringement Review - Parking%'`. The earlier exact value `Parking Infringement Review` is **not** a valid current Service_Name filter. Nomination filter remains `Service_Name = 'Parking Infringement Nomination'`.
+
+For the same 310,302 PEMS tickets issued 2025-04-10 through 2026-07-28, a single run returned:
+
+| Exclusive observed group | Distinct tickets | % issued |
+| --- | ---: | ---: |
+| Review only | 19,317 | 6.23% |
+| Nomination only | 13,422 | 4.33% |
+| Both | 499 | 0.16% |
+| Neither observed | 277,064 | 89.29% |
+| **Total** | **310,302** | **100% (rounding)** |
+
+Derived: 19,816 tickets with review (6.39%); 13,921 with nomination (4.49%); 33,238 with either (10.71%); 499 / 13,921 = 3.58% of nominated tickets also reviewed. 'Neither observed' is **not** 'paid'.
+
+**Volatility warning:** `vwcase` is being updated intraday, including historical infringement identifiers: 59,454 cases with infringement number earlier vs 59,564 later for cases opened before 2026-10-28. Nominated ticket counts varied between 13,955, 14,043 and 13,921 across runs. Do not combine denominators and numerators from different runs or present these figures as frozen. Save a consistent as-of snapshot or materialise the case cohort in an authorised workspace for reproducibility; capture query version, extraction timestamp, timezone and source freshness. This is a data-consistency need, not permission to change production sources.
+
+**Next analytical action:** Inspect review service classifications and event sequence for the 499 overlapping tickets; measure completeness of `Infringement_Number` for review and nomination cases by month; repeat with a reproducible single-run snapshot. Continue to treat payment as unmeasured pending Pathway parent mapping.
